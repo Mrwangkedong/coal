@@ -43,8 +43,21 @@ public class FacMsgController {
         return facMsgServer.getFacInfo(fac_id);
     }
 
-    int editFacMsgInfo(@RequestParam int fac_id,@RequestParam ){
-
+    @ResponseBody
+    @ApiOperation("更改工厂信息的非图片部分")
+    @PostMapping(path = "/editFacMsgInfo")
+    int editFacMsgInfo(@RequestParam int fac_id,@RequestParam String facName,@RequestParam String factory_address,@RequestParam String factory_lpname,
+        float factory_longitude,@RequestParam float factory_latitude,@RequestParam String factory_lpcardnum){
+//        1.根据fac_id获得信息实体
+        FactoryQualified factoryQualified = facQuaServer.exitFacQuaByFacId(fac_id);
+        //2.赋予实体值
+        factoryQualified.setName(facName);
+        factoryQualified.setFactory_address(factory_address);
+        factoryQualified.setFactory_lpname(factory_lpname);
+        factoryQualified.setFactory_longitude(factory_longitude);
+        factoryQualified.setFactory_latitude(factory_latitude);
+        //3.返回更新信息1/0
+        return facQuaServer.editFacQualified(factoryQualified);
     }
 
 
@@ -58,9 +71,6 @@ public class FacMsgController {
         String url_path = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto1" + File.separator + String.valueOf(fac_id)+".png";
         //图片保存路径
         String savePath = pathStatic + File.separator + url_path;
-
-        System.out.println(url_path);
-        System.out.println(savePath);
 
 //        0.进行FacQualified信息的更新
 //        1.根据fac_id获得信息实体

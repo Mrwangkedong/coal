@@ -1,6 +1,8 @@
 package com.example.coal.controller;
 
 
+import com.example.coal.Utils.TimeUtils;
+import com.example.coal.bean.FactoryOrder;
 import com.example.coal.server.FacOrderServer;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +71,31 @@ public class FacOrderController {
         return facOrderServer.getFacOrderIng2(fac_id);
     }
 
+    @ResponseBody
+    @RequestMapping(path = "/addNewFacOrder",method = RequestMethod.POST)
+    @ApiOperation("添加新的工厂订单")
+    int addNewFacOrder(@RequestParam int ff_id,@RequestParam int ft_id,@RequestParam int carClass,
+                       @RequestParam String goodClass,@RequestParam int targetCarNum,
+                       @RequestParam int targetGoodNum,@RequestParam int targetTransportTime,@RequestParam float goodPrice){
+        //新建一个工厂订单实体
+        FactoryOrder factoryOrder = new FactoryOrder();
+        //赋值
+        factoryOrder.setFf_id(ff_id);
+        factoryOrder.setFt_id(ft_id);
+        factoryOrder.setOrder_carclass(carClass);
+        factoryOrder.setOrder_goodclass(goodClass);
+        factoryOrder.setOrder_actualcarnum(targetCarNum);
+        factoryOrder.setOrder_targetcarnum(targetGoodNum);
+        factoryOrder.setOrder_transporttime(targetTransportTime);
+        factoryOrder.setOrder_goodprice(goodPrice);
+        //进行状态赋值
+        factoryOrder.setOrder_state(2);
+        //开始时间赋值
+        factoryOrder.setOrder_startdate(TimeUtils.getNowDate());
+        //进行添加
+        return facOrderServer.addNewFacOrder(factoryOrder);
+
+    }
 
 
 }

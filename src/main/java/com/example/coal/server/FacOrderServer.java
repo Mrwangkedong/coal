@@ -240,6 +240,19 @@ public class FacOrderServer{
         return maps;
     }
 
+    /**
+     * 添加新的工厂订单
+     * @param factoryOrder 工厂实体信息
+     * @return 1/0
+     */
+    public int addNewFacOrder(FactoryOrder factoryOrder){
+        int i = mapper.addNewFacOrder(factoryOrder);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
 
     /***
      * 工厂订单接受
