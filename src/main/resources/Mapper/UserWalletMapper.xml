@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.UserWalletMapper">
+    <select id="getWalletInfo" resultType="com.example.coal.bean.UserWallet">
+        select * from user_wallet where user_id = #{user_id} and wallet_state = #{wallet_state}
+    </select>
+
+    <insert id="addNewWallet">
+        insert into user_wallet (user_id, wallet_state, wallet_money)
+        values (#{user_id},#{wallet_state},0);
+    </insert>
+
+    <update id="editWalletInfoDri" parameterType="com.example.coal.bean.UserWallet">
+        update user_wallet
+        set bcard_photo = #{bcard_photo},
+            bcard_number = #{bcard_number},
+            wallet_money = #{wallet_money},
+            bcard_name = #{bcard_name},
+            bcard_pcardnum = #{bcard_pcardnum}
+        where user_id = #{user_id} and wallet_state = #{wallet_state};
+    </update>
+
+</mapper>

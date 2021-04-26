@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.DriverOrderMapper">
+
+<!--Mon Oct 29 17:16:04 CST 2018-->
+<!--    根据司机id查看所有订单-->
+    <select id="getDriOrderList" resultType="com.example.coal.bean.DriverOrder">
+        select * from driver_order where driver_id = #{d_id} and order_state = 0
+    </select>
+<!--获得订单的卖家工厂名称-->
+    <select id="getDriOrderFF_NAME" resultType="String">
+        SELECT NAME FROM factory_msg WHERE id = (SELECT ff_id FROM factory_order WHERE id = #{dOrder_id})
+    </select>
+<!--获得订单的买家工厂名称-->
+    <select id="getDriOrderFT_NAME" resultType="String">
+        SELECT NAME FROM factory_msg WHERE id = (SELECT ft_id FROM factory_order WHERE id = #{dOrder_id})
+    </select>
+    
+<!--    获得当前可接受订单-->
+    <select id="getOrderWaitInfo" resultType="com.example.coal.bean.FactoryOrder">
+        select * from factory_order where order_state = 1;
+    </select>
+<!--    获得当前订单-->
+    <select id="getOrderNow" resultType="com.example.coal.bean.DriverOrder">
+        select * from driver_order where driver_id = #{d_id} and (order_state = 1 or order_state = 2 or order_state = 3)
+    </select>
+
+<!--    根据订单id,获得订单详情-->
+    <select id="getDriOrderInfo" resultType="com.example.coal.bean.DriverOrder">
+        select * from driver_order where id=#{driOrder_id}
+    </select>
+
+    <!--    添加新的司机订单（司机id，工厂订单）{司机id，工厂订单id，保证金额，状态1}-->
+    <insert id="addDriOrderInfo" parameterType="map">
+        insert into driver_order(driver_id,factory_orderid,order_startdate,order_ensuremoney,order_state) value (#{driver_id},#{factory_orderid},#{order_startdate},#{order_ensuremoney},1)
+    </insert>
+
+<!--    // 修改司机进行中订单信息（到/离厂时间，操作员等等）-->
+    <update id="editDriOrderInfo" parameterType="com.example.coal.bean.DriverOrder">
+        update driver_order
+        set order_arriveffactorydate = #{order_arriveffactorydate},
+            order_leaveffactorydate = #{order_leaveffactorydate},
+            order_enddate = #{order_enddate},
+            order_startdate = #{order_startdate},
+            order_pz = #{order_pz},
+            order_mz = #{order_mz},
+            order_mz2 = #{order_mz2},
+            order_ontime = #{order_ontime},
+            order_state = #{order_state},
+            order_fedituserid1 = #{order_fedituserid1},
+            order_fedituserid2 = #{order_fedituserid2},
+            order_tedituserid = #{order_tedituserid},
+            order_srart = #{order_srart}
+        where id=#{id};
+    </update>
+
+    <select id="getFacOrderSonOrder" resultType="com.example.coal.bean.DriverOrder">
+        select * from driver_order where factory_orderid = #{fac_orderID}
+    </select>
+    
+
+</mapper>

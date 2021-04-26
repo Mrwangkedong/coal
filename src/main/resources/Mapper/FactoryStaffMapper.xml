@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.FactoryStaffMapper">
+    <select id="getAllStall" resultType="com.example.coal.bean.FactoryStaff">
+        select * from factory_staff where factory_id = #{fac_id}
+    </select>
+
+    <insert id="addNewStaff" parameterType="com.example.coal.bean.FactoryStaff">
+        insert into factory_staff (factory_id, staff_phonenum, staff_name, staff_sex,
+                                   staff_password, staff_class, staff_birthday,
+                                   staff_pcrdnumber,staff_place)
+        values (#{factory_id}, #{staff_phonenum}, #{staff_name}, #{staff_sex},
+                #{staff_password}, #{staff_class}, #{staff_birthday},
+                #{staff_pcrdnumber},#{staff_place});
+    </insert>
+
+    <select id="getStaffInfo" resultType="com.example.coal.bean.FactoryStaff">
+        select * from factory_staff where id = #{staff_id}
+    </select>
+    
+    <update id="editStaffInfo" parameterType="com.example.coal.bean.FactoryStaff">
+        update factory_staff
+        set staff_phonenum = #{staff_phonenum},staff_password = #{staff_password},staff_class = #{staff_class},
+            staff_birthday = #{staff_birthday},staff_pcrdnumber = #{staff_pcrdnumber},staff_place=#{staff_place}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffInfo" parameterType="int">
+        delete from factory_staff where id = #{staff_id}
+    </delete>
+    
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.DriverMsgMapper">
+    <!--    返回全部未验证订单-->
+
+<!--    查找所有的d_id-->
+    <select id="getDriverIds" resultType="int">
+        select id from driver_msg
+    </select>
+
+    <select id="getDriverPwb" resultType="String">
+        select d_password from driver_msg where id = #{d_id}
+    </select>
+
+    <select id="getDriverMsg" resultType="com.example.coal.bean.DriverMsg">
+        select * from driver_msg where id = #{d_id}
+    </select>
+
+    <select id="getWalletMsg" resultType="com.example.coal.bean.UserWallet">
+        select * from user_wallet where user_id = #{d_id} and wallet_state = 1
+    </select>
+
+    <insert id="addNewDriver" parameterType="map">
+        insert into driver_msg (d_password,d_name,d_phonenum,d_sex) value (#{d_password},#{d_name},#{d_phonenum},#{d_sex})
+    </insert>
+
+    <update id="editDriverMsg" parameterType="com.example.coal.bean.DriverMsg">
+        update driver_msg set d_password = #{d_password},d_ifbcard = #{d_ifbcard},d_ifqualified = #{d_ifqualified},d_distance = #{d_distance},d_txaddress = #{d_txaddress},d_pay_password = #{d_pay_password},d_cid = #{d_cid} where id=#{id}
+    </update>
+
+
+
+
+</mapper>

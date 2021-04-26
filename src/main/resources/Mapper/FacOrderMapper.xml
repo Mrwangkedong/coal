@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.FacOrderMapper">
+    <!--    查看可接受订单-->
+    <select id="getWaitOrderList" resultType="com.example.coal.bean.FactoryOrder">
+        select * from factory_order where order_state
+    </select>
+
+<!--    根据工厂订单id，获得订单的详细信息-->
+    <select id="getFacOrderInfo" resultType="com.example.coal.bean.FactoryOrder">
+        select *
+        from factory_order where id=#{facOrder_id};
+    </select>
+
+
+    <insert id="addNewFacOrder" parameterType="com.example.coal.bean.FactoryOrder">
+        insert into factory_order(ff_id,ft_id,order_startdate,
+                                  order_targetcarnum,
+                                  order_carclass,order_state,order_targetweight,
+                                  order_fstartuserid,order_transporttime,order_goodclass,order_goodprice)
+                value (#{ff_id},#{ft_id},#{order_startdate},
+                        #{order_targetcarnum},
+                        #{order_carclass},#{order_state},#{order_targetweight},
+                        #{order_fstartuserid},#{order_transporttime},#{order_goodclass},#{order_goodprice})
+    </insert>
+
+<!--    更改订单信息-->
+    <update id="editFacOrder" parameterType="com.example.coal.bean.FactoryOrder">
+        update factory_order
+        set order_enddate = #{order_enddate},
+            order_state = #{order_state},
+            order_refuseReason = #{order_refuseReason},
+            order_endupdate = #{order_endupdate},
+            order_actualcarnum = #{order_actualcarnum},
+            order_actualweight = #{order_actualweight}
+        where id=#{id};
+    </update>
+
+
+    <select id="getFacOrderEd1" parameterType="int" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ff_id = #{fac_id} AND order_state = 0;
+    </select>
+
+    <select id="getFacOrderEd2" parameterType="int" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ft_id = #{fac_id} AND order_state = 0;
+    </select>
+
+    <select id="getFacOrderIng1" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ff_id = #{fac_id} AND (order_state = 3 or order_state = 1)
+    </select>
+
+    <select id="getFacOrderIng2" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ft_id = #{fac_id} AND (order_state = 3 or order_state = 1)
+    </select>
+
+    <select id="getFacOrderWait1" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ff_id = #{fac_id} AND (order_state = 2 or order_state = 4)
+    </select>
+
+    <select id="getFacOrderWait2" resultType="com.example.coal.bean.FactoryOrder">
+        SELECT * from factory_order WHERE ft_id = #{fac_id} AND order_state = 2
+    </select>
+
+
+
+<!--    -->
+
+
+
+
+
+
+
+
+</mapper>

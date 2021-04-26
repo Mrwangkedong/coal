@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.FacMsgMapper">
+<!--    根据id查看工厂信息-->
+    <select id="getFacInfo" resultType="com.example.coal.bean.FactoryMsg">
+        select *
+        from factory_msg where id = #{fac_id};
+    </select>
+
+    <select id="getFFNameByFacOrderID" resultType="String">
+        SELECT name FROM factory_msg WHERE id=(SELECT ff_id FROM factory_order WHERE id = #{fac_orderID})
+    </select>
+
+    <select id="getFTNameByFacOrderID" resultType="String">
+        SELECT name FROM factory_msg WHERE id=(SELECT ft_id FROM factory_order WHERE id = #{fac_orderID})
+    </select>
+
+    <select id="getFacInfos" resultType="com.example.coal.bean.FactoryMsg">
+        select * from factory_msg;
+    </select>
+
+    <update id="editFacMsg" parameterType="com.example.coal.bean.FactoryMsg">
+        update factory_msg
+        set  name = #{name},factory_address = #{factory_address}, factory_longitude = #{factory_longitude},
+             factory_latitude = #{factory_latitude}, factory_lpname = #{factory_lpname},
+             factory_lpcardnum = #{factory_lpcardnum}, factory_lpcardphoto1 = #{factory_lpcardphoto1},
+             factory_lpcardphoto2 = #{factory_lpcardphoto2},factory_licencephoto = #{factory_licencephoto}
+        where id = #{id};
+    </update>
+
+</mapper>

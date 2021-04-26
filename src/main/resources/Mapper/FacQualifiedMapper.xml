@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.FacQualifiedMapper">
+
+    <insert id="addFacQualified">
+        insert into factory_qualified (factory_id)
+        values (#{fac_id});
+    </insert>
+    
+    <select id="getFacQualifiedInfo" resultType="com.example.coal.bean.FactoryQualified">
+        select * from factory_qualified where factory_id = #{fac_id}
+    </select>
+    
+    
+    <update id="editFacQualified" parameterType="com.example.coal.bean.FactoryQualified">
+        update factory_qualified
+        set name = #{name}, factory_address = #{factory_address}, factory_longitude = #{factory_longitude},
+            factory_latitude = #{factory_latitude},factory_lpname = #{factory_lpname},factory_lpcardnum = #{factory_lpcardnum},
+            factory_lpcardphoto1 = #{factory_lpcardphoto1},factory_lpcardphoto2 = #{factory_lpcardphoto2},
+            factory_licencephoto = #{factory_licencephoto}
+        where factory_id = #{factory_id};
+    </update>
+    
+</mapper>
