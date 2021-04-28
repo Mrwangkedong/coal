@@ -43,6 +43,15 @@ public class FacStaffServer {
         return mapper.getStaffInfo(staff_id);
     }
 
+    /**
+     * 通过员工id，获得员工的姓名
+     * @param staff_id 员工id
+     * @return 员工姓名
+     */
+    public String getStaffName(int staff_id){
+        FactoryStaff staffInfo = getStaffInfo(staff_id);
+        return staffInfo.getStaff_name();
+    }
 
     /***
      * 修改密码

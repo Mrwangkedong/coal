@@ -133,6 +133,13 @@ public class DriverOrderController {
         return driverOrderServer.editDriOrderInfo(driOrderInfo);
     }
 
+    @ResponseBody
+    @RequestMapping(path = "/getDriOrderAllInfo",method = RequestMethod.POST)
+    @ApiOperation("工厂方查看司机订单信息")
+    public Map<String ,Object> getDriOrderAllInfo(int dri_orderId){
+        return driverOrderServer.getDriOrderAll(dri_orderId);
+    }
+
 
 
 

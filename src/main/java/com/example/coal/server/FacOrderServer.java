@@ -413,6 +413,52 @@ public class FacOrderServer{
     }
 
 
+    public List<Map<String,Object>> getFacOrderSonOrderEd(int fac_orderId){
+        //定义List
+        List<Map<String ,Object>> sonOrderList = new ArrayList<>();
+        //获得List<DriverOrder>
+        List<DriverOrder> facOrderSonOrders = sqlsession.getMapper(DriverOrderMapper.class).getFacOrderSonOrder(fac_orderId);
+        //获得订单运费单价
+        FactoryOrder facOrderInfo = (FactoryOrder) getFacOrderInfo(fac_orderId).get("facOrderInfo");
+        float facorder_goodprice = facOrderInfo.getOrder_goodprice();
+        //进行facOrderSonOrders遍历
+        for (DriverOrder facOrderSonOrder : facOrderSonOrders) {
+            //获得子订单id，司机id
+            int dri_orderId = facOrderSonOrder.getDriver_id();
+            int driver_id = facOrderSonOrder.getDriver_id();
+            //通过子订单司机id获得司机姓名，电话号码
+            DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);
+            String d_name = driverMsg.getD_name();
+            String d_phonenum = driverMsg.getD_phonenum();
+            //获得子订单接单时间,订单完成时间
+            Date order_startdate = facOrderSonOrder.getOrder_startdate();
+            Date order_enddate = facOrderSonOrder.getOrder_enddate();
+            //获得离厂[始]毛重，到厂[终]毛重
+            float order_mz1 = facOrderSonOrder.getOrder_mz();
+            float order_mz2 = facOrderSonOrder.getOrder_mz2();
+            //获得是否准时
+            int order_ontime = facOrderSonOrder.getOrder_ontime();
+            //获得订单运费单价/总金额
+            float order_money = facOrderSonOrder.getOrder_money();
+            //新建map
+            Map<String,Object> map = new HashMap<>();
+            map.put("d_orderId",dri_orderId);
+            map.put("d_name",d_name);
+            map.put("d_phoneNum",d_phonenum);
+            map.put("order_startdate",order_startdate);
+            map.put("order_enddate",order_enddate);
+            map.put("order_mz1",order_mz1);
+            map.put("order_mz2",order_mz2);
+            map.put("order_ontime",order_ontime);
+            map.put("facorder_goodprice",facorder_goodprice);
+            map.put("order_money",order_money);
+            sonOrderList.add(map);
+        }
+
+        return sonOrderList;
+    }
+
+
 
     public static void main(String[] args) {
         String aStatic = ClassUtils.getDefaultClassLoader().getResource("static").getPath();

@@ -26,12 +26,9 @@ public class DriverOrderServer {
         String driOrderFF_name = mapper.getDriOrderFF_NAME(factory_orderid);
         String driOrderFT_name = mapper.getDriOrderFT_NAME(factory_orderid);
         Map<String ,Object> map = new HashMap<>();
-        map.put("ff_name",driOrderFF_name);
-        map.put("ft_name",driOrderFT_name);
+
 //        获得订单详情
         FactoryOrder facOrderInfo = (FactoryOrder) new FacOrderServer().getFacOrderInfo(factory_orderid).get("facOrderInfo");
-        map.put("facOrderInfo",facOrderInfo);
-
         //获得订单卖家
         int ff_id = facOrderInfo.getFf_id();
         FactoryMsg ff_facInfo = new FacMsgServer().getFacInfo(ff_id);
@@ -46,14 +43,19 @@ public class DriverOrderServer {
         float ft_factory_latitude = ft_facInfo.getFactory_latitude();
         //获得买家卖家之间的路线距离
         double distance = new DistanceUtil().getDistance(ff_factory_longitude, ff_factory_latitude, ft_factory_longitude, ft_factory_latitude);
-
+        map.put("ff_name",driOrderFF_name);
+        map.put("ft_name",driOrderFT_name);
+        map.put("facOrderInfo",facOrderInfo);
         map.put("distance",distance);
-
 
         return map;
     }
 
-
+    /**
+     * 获得司机订单中双方厂家的路线
+     * @param driver_id
+     * @return
+     */
     public Map<String, Float> getOrderNowRoute(int driver_id){
         DriverOrderServer driverOrderServer = new DriverOrderServer();
         //获得当前订单信息
@@ -90,7 +92,13 @@ public class DriverOrderServer {
 
     }
 
-//    获得司机的全部历史订单记录（订单时间，订单编号，金额，订单双方）
+//
+
+    /**
+     * 获得司机的全部历史订单记录（订单时间，订单编号，金额，订单双方）
+     * @param d_id 司机id
+     * @return List
+     */
     public List<Map<String ,Object>> getDriOrderList(int d_id){
 
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
@@ -265,10 +273,6 @@ public class DriverOrderServer {
 
     }
 
-
-
-
-
     /****
      * 对司机的订单信息进行修改
      * @param driverOrder   订单实体
@@ -276,10 +280,48 @@ public class DriverOrderServer {
      */
     public int editDriOrderInfo(DriverOrder driverOrder){
         int i = mapper.editDriOrderInfo(driverOrder);
-        sqlsession.commit();
+        if (i == 1){
+            sqlsession.commit();
+        }
         return i;
     }
 
+    /**
+     * 工厂方查看司机订单信息
+     * @param dri_orderId 司机订单id
+     * @return 司机订单详细信息
+     */
+    public Map<String ,Object> getDriOrderAll(int dri_orderId){
+        //通过订单id，获得订单
+        DriverOrder driOrderInfo = mapper.getDriOrderInfo(dri_orderId);
+        //通过订单信息，获得工厂订单一些信息[订单单价，双方工厂名称]
+        int factory_orderid = driOrderInfo.getFactory_orderid();
+        FactoryOrder facOrderInfo = (FactoryOrder) new FacOrderServer().getFacOrderInfo(factory_orderid).get("facOrderInfo");
+        String ffName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ffName");
+        String ftName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ftName");
+        float order_goodprice = facOrderInfo.getOrder_goodprice();
+        //通过订单信息，获得司机的一些信息【司机姓名，司机手机号码】
+        int driver_id = driOrderInfo.getDriver_id();
+        DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);
+        String d_name = driverMsg.getD_name();
+        String d_phonenum = driverMsg.getD_phonenum();
+        //通过订单信息获得订单操作员姓名！
+        String staffName1 = new FacStaffServer().getStaffName(driOrderInfo.getOrder_fedituserid1()); //称空车
+        String staffName2 = new FacStaffServer().getStaffName(driOrderInfo.getOrder_fedituserid2()); //称出厂满车
+        String staffName3 = new FacStaffServer().getStaffName(driOrderInfo.getOrder_tedituserid());  //称入场满车
+        //新建map，进行添加
+        Map<String,Object> map = new HashMap<>();
+        map.put("ffName",ffName);
+        map.put("ftName",ftName);
+        map.put("d_name",d_name);
+        map.put("d_phonenum",d_phonenum);
+        map.put("order_goodprice",order_goodprice);
+        map.put("staffName1",staffName1);
+        map.put("staffName2",staffName2);
+        map.put("staffName3",staffName3);
+        map.put("driOrderInfo",driOrderInfo);
+        return map;
+    }
 
 
 

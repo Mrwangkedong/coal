@@ -126,4 +126,11 @@ public class FacOrderController {
         return facOrderServer.getFacOrderSonOrder(fac_orderId);
     }
 
+    @ResponseBody
+    @RequestMapping(path = "/getFacOrderSonOrderEd",method = RequestMethod.POST)
+    @ApiOperation("获得一个公司订单下的所有子订单Ed")
+    List<Map<String,Object>> getFacOrderSonOrderEd(int fac_orderId){
+        return facOrderServer.getFacOrderSonOrderEd(fac_orderId);
+    }
+
 }
