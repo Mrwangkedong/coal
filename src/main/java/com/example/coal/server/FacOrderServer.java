@@ -1,21 +1,24 @@
 package com.example.coal.server;
 
+import com.example.coal.Utils.DistanceUtil;
+import com.example.coal.Utils.MapUtils;
 import com.example.coal.Utils.MybatisUtils;
+import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.DriverOrder;
+import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryOrder;
 import com.example.coal.dao.DriverOrderMapper;
 import com.example.coal.dao.FacOrderMapper;
 import org.apache.ibatis.session.SqlSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.util.ClassUtils;
 
 import javax.jws.Oneway;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FacOrderServer{
 
@@ -264,6 +267,11 @@ public class FacOrderServer{
         FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
         //更改订单的状态信息,2(待确认)->1(接单/进行)
         facOrderInfo.setOrder_state(1);
+
+        /*
+         * 此处应有转账
+         */
+
         return new FacOrderServer().editFacOrder(facOrderInfo);
     }
 
@@ -278,6 +286,11 @@ public class FacOrderServer{
         //更改订单的状态信息,2(待确认)->4(拒绝/进行)
         facOrderInfo.setOrder_state(4);   //订单状态
         facOrderInfo.setOrder_refuseReason(order_refuseReason);  //拒绝原因
+
+        /*
+        此处应有转账
+         */
+
         return new FacOrderServer().editFacOrder(facOrderInfo);
     }
 
@@ -286,24 +299,118 @@ public class FacOrderServer{
      * @param fac_orderID 工厂订单id
      * @return
      */
-    public Map<String,Object> getOrderIngInfo(int fac_orderID){
-        //获得List<DriverOrder>
-        List<DriverOrder> facOrderSonOrder = sqlsession.getMapper(DriverOrderMapper.class).getFacOrderSonOrder(fac_orderID);
+    public Map<String,Object> getFacOrderGPS(int fac_orderID){
         FacMsgServer facMsgServer = new FacMsgServer();
-        //获得双方工厂名称
-        Map<String, Object> names = facMsgServer.getNamesByFacOrderId(fac_orderID);
-        String ffName = (String) names.get("ffName");
-        String ftName = (String) names.get("ftName");
 //       获得具体订单信息
         FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
+        //获得双方工厂
+        int ff_id = facOrderInfo.getFf_id();
+        int ft_id = facOrderInfo.getFt_id();
+        //更具fac_id获得工厂的具体信息
+        FactoryMsg ff_facInfo = new FacMsgServer().getFacInfo(ff_id);
+        FactoryMsg ft_facInfo = new FacMsgServer().getFacInfo(ft_id);
+        //获得ff的经纬度
+        float ff_longitude = ff_facInfo.getFactory_longitude();
+        float ff_latitude = ff_facInfo.getFactory_latitude();
+        //获得ft的经纬度
+        float ft_longitude = ft_facInfo.getFactory_longitude();
+        float ft_latitude = ft_facInfo.getFactory_latitude();
         Map<String,Object> map = new HashMap<>();
-        map.put("ffName",ffName);
-        map.put("ftName",ftName);
-        map.put("facOrderInfo",facOrderInfo);
-        map.put("SonOrderList",facOrderSonOrder);
+        //添加经纬度到map中
+        map.put("ff_longitude",ff_longitude);map.put("ff_latitude",ff_latitude);
+        map.put("ft_longitude",ft_longitude);map.put("ft_latitude",ft_latitude);
         return map;
     }
 
+    /***
+     * 获得工厂订单的子订单列表【司机姓名，司机手机号，订单id，订单经纬度，当前所在地，当前状态，距离始发地/目的地距离】
+     * @param fac_orderId 工厂订单id
+     */
+    public List<Map<String ,Object>> getFacOrderSonOrder(int fac_orderId) throws JSONException {
+        //定义List
+        List<Map<String ,Object>> sonOrderList = new ArrayList<>();
+        //获得List<DriverOrder>
+        List<DriverOrder> facOrderSonOrders = sqlsession.getMapper(DriverOrderMapper.class).getFacOrderSonOrder(fac_orderId);
+        //进行facOrderSonOrders遍历
+        for (DriverOrder facOrderSonOrder : facOrderSonOrders) {
+            //获得子订单id，司机id
+            int dri_orderId = facOrderSonOrder.getDriver_id();
+            int driver_id = facOrderSonOrder.getDriver_id();
+            //通过子订单司机id获得司机姓名，电话号码
+            DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);
+            String d_name = driverMsg.getD_name();
+            String d_phonenum = driverMsg.getD_phonenum();
+            //获得经纬度,当前所在地
+            float order_longitude = facOrderSonOrder.getOrder_longitude();
+            float order_latitude = facOrderSonOrder.getOrder_latitude();
+            String address = MapUtils.longitudeToAddress(order_longitude, order_latitude);  //转化所在地
+            //获得子订单状态
+            int order_state = facOrderSonOrder.getOrder_state();
+            //获得子订单接单时间
+            Date order_startdate = facOrderSonOrder.getOrder_startdate();
+            //通过司机订单，获得当前位置距离双方工厂的距离
+            List<Float> distanceToFacs = getDistanceToFacs(facOrderSonOrder);
+            Float FTDistance = distanceToFacs.get(0);
+            Float FFDistance = distanceToFacs.get(1);
+            //新建map
+            Map<String,Object> map = new HashMap<>();
+            map.put("d_orderId",dri_orderId);
+            map.put("d_name",d_name);
+            map.put("d_phoneNum",d_phonenum);
+            map.put("d_address",address);
+            map.put("order_longitude",order_longitude);
+            map.put("order_latitude",order_latitude);
+            map.put("d_state",order_state);
+            map.put("order_startdate",order_startdate);
+            if (order_state == 1){
+                String s = "距离卖家工厂"+String.valueOf(FFDistance)+"Km";
+                map.put("d_distance",s);
+            }else if (order_state == 2){
+                String s = "距离买家工厂"+String.valueOf(FTDistance)+"Km";
+                map.put("d_distance",s);
+            }else if (order_state == 3){
+                String s = "距离买家工厂"+String.valueOf(FTDistance)+"Km";
+                map.put("d_distance",s);
+            }else {
+                String s = "已送达";
+                map.put("d_distance",s);
+            }
+            sonOrderList.add(map);
+        }
+
+        return sonOrderList;
+    }
+
+    /**
+     * 返回司机订单所处位置距离双方工厂的距离
+     * @param driverOrder 司机订单
+     * @return 【距离买家工厂距离，距离卖家工厂距离】
+     */
+    public List<Float> getDistanceToFacs(DriverOrder driverOrder){
+        //获得订单经纬度
+        float driOrder_longitude = driverOrder.getOrder_longitude();
+        float driOrder_latitude = driverOrder.getOrder_latitude();
+        //通过司机订单获得工厂订单详情
+        int factory_orderid = driverOrder.getFactory_orderid();
+        FactoryOrder facOrderInfo = mapper.getFacOrderInfo(factory_orderid);
+        //通过工厂订单获得双方工厂id
+        int ff_id = facOrderInfo.getFf_id();
+        int ft_id = facOrderInfo.getFt_id();
+        //通过ff_id获得工厂信息并获得距离
+        FactoryMsg ff_facInfo = new FacMsgServer().getFacInfo(ff_id);
+        float ff_longitude = ff_facInfo.getFactory_longitude();
+        float ff_latitude = ff_facInfo.getFactory_latitude();
+        float distanceToFF = DistanceUtil.getDistance(driOrder_longitude, driOrder_latitude, ff_longitude, ff_latitude);
+        //通过ft_id获得工厂信息并获得距离
+        FactoryMsg ft_facInfo = new FacMsgServer().getFacInfo(ft_id);
+        float ft_longitude = ff_facInfo.getFactory_longitude();
+        float ft_latitude = ff_facInfo.getFactory_latitude();
+        float distanceToFT = DistanceUtil.getDistance(driOrder_longitude, driOrder_latitude, ft_longitude, ft_latitude);
+        List<Float> floatList = new ArrayList<>();
+        floatList.add(distanceToFT);
+        floatList.add(distanceToFF);
+        return floatList;
+    }
 
 
 

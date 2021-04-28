@@ -6,10 +6,12 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 
 public class DistanceUtil {
 
-    public double getDistance(double longitudeFrom, double latitudeFrom, double longitudeTo, double latitudeTo) {
+    public static float getDistance(float longitudeFrom, float latitudeFrom, float longitudeTo, float latitudeTo) {
         GlobalCoordinates source = new GlobalCoordinates(latitudeFrom, longitudeFrom);
         GlobalCoordinates target = new GlobalCoordinates(latitudeTo, longitudeTo);
+        float ellipsoidalDistance = (float)new GeodeticCalculator().calculateGeodeticCurve(Ellipsoid.Sphere, source, target).getEllipsoidalDistance();
 
-        return new GeodeticCalculator().calculateGeodeticCurve(Ellipsoid.Sphere, source, target).getEllipsoidalDistance();
+        String res = String.format("%.2f", ellipsoidalDistance);
+        return Float.parseFloat(res);
     }
 }

@@ -51,7 +51,9 @@
             order_fedituserid1 = #{order_fedituserid1},
             order_fedituserid2 = #{order_fedituserid2},
             order_tedituserid = #{order_tedituserid},
-            order_srart = #{order_srart}
+            order_srart = #{order_srart},
+            order_longitude = #{order_longitude},
+            order_latitude = #{order_latitude},
         where id=#{id};
     </update>
 

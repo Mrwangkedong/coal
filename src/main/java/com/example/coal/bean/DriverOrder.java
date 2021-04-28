@@ -46,5 +46,9 @@ public class DriverOrder {
     private int order_tedituserid;
 //    评价星级
     private int order_srart;
+//    当前位置经度
+    private float order_longitude;
+//    当前位置纬度
+    private float order_latitude;
 
 }

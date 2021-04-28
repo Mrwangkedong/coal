@@ -6,6 +6,7 @@ import com.example.coal.bean.FactoryOrder;
 import com.example.coal.server.FacOrderServer;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.json.JSONException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -25,6 +26,13 @@ public class FacOrderController {
     @ApiOperation("得到一个工厂订单的具体信息...")
     public Map<String,Object> getFacOrderInfo(@ApiParam("输入一个工厂订单id")@RequestParam int fac_orderid){
         return facOrderServer.getFacOrderInfo(fac_orderid);
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/getFacOrderGPS",method = RequestMethod.POST)
+    @ApiOperation("得到一个工厂订单的GPS信息...")
+    Map<String,Object> getFacOrderGPS(int fac_orderID){
+        return facOrderServer.getFacOrderGPS(fac_orderID);
     }
 
 
@@ -97,5 +105,25 @@ public class FacOrderController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(path = "/facOrderJieshou",method = RequestMethod.POST)
+    @ApiOperation("买家工厂接收新的订单")
+    int facOrderJieshou(@RequestParam int fac_orderID){
+        return facOrderServer.facOrderJieshou(fac_orderID);
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/facOrderJujue",method = RequestMethod.POST)
+    @ApiOperation("买家工厂拒绝新的订单，并给出拒绝理由")
+    int facOrderJujue(int fac_orderID,String order_refuseReason){
+        return facOrderServer.facOrderJujue(fac_orderID,order_refuseReason);
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/getFacOrderSonOrder",method = RequestMethod.POST)
+    @ApiOperation("获得一个公司订单下的所有子订单")
+    List<Map<String ,Object>> getFacOrderSonOrder(int fac_orderId) throws JSONException{
+        return facOrderServer.getFacOrderSonOrder(fac_orderId);
+    }
 
 }
