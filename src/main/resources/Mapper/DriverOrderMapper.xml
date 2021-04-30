@@ -47,13 +47,15 @@
             order_mz = #{order_mz},
             order_mz2 = #{order_mz2},
             order_ontime = #{order_ontime},
+--             以上正确
+            order_money = #{order_money},
             order_state = #{order_state},
             order_fedituserid1 = #{order_fedituserid1},
             order_fedituserid2 = #{order_fedituserid2},
             order_tedituserid = #{order_tedituserid},
-            order_srart = #{order_srart},
+            order_star = #{order_star},
             order_longitude = #{order_longitude},
-            order_latitude = #{order_latitude},
+            order_latitude = #{order_latitude}
         where id=#{id};
     </update>
 

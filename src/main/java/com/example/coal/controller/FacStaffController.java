@@ -78,6 +78,13 @@ public class FacStaffController {
     }
 
     @ResponseBody
+    @PostMapping(path = "/getStaffName")
+    @ApiOperation("获得某个员工姓名")
+    String getStaffName(int staff_id){
+        return facStaffServer.getStaffName(staff_id);
+    }
+
+    @ResponseBody
     @PostMapping(path = "/editStaffPwb")
     @ApiOperation("更改员工密码")
     int editStaffPwb(@RequestParam int staff_id,@RequestParam String newPwb){

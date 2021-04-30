@@ -9,8 +9,7 @@
 
 <!--    根据工厂订单id，获得订单的详细信息-->
     <select id="getFacOrderInfo" resultType="com.example.coal.bean.FactoryOrder">
-        select *
-        from factory_order where id=#{facOrder_id};
+        select * from factory_order where id=#{facOrder_id};
     </select>
 
 

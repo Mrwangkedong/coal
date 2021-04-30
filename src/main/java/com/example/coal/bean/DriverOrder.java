@@ -45,7 +45,7 @@ public class DriverOrder {
 //    买方过重车操作员id
     private int order_tedituserid;
 //    评价星级
-    private int order_srart;
+    private int order_star;
 //    当前位置经度
     private float order_longitude;
 //    当前位置纬度

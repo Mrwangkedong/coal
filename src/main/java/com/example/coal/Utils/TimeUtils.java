@@ -1,6 +1,10 @@
 package com.example.coal.Utils;
 
+
+import java.util.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class TimeUtils {
 
@@ -8,4 +12,22 @@ public class TimeUtils {
         java.util.Date date = new java.util.Date();          // 获取一个Date对象
         return new Timestamp(date.getTime());
     }
+
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        Date fromDate2 = simpleFormat.parse("2018-03-01 12:00");
+        Date toDate2 = simpleFormat.parse("2018-03-12 12:00");
+        System.out.println(ifOntime(toDate2, fromDate2, 23));
+    }
+
+    public static int ifOntime(Date toDate2, Date fromDate2, int hoursNum) {
+        long timeStart = fromDate2.getTime();
+        long time = toDate2.getTime();
+        int hours = (int) ((time - timeStart) / (1000 * 60 * 60));
+        System.out.println(hours);
+        if (hours <= hoursNum)
+            return 1;
+        else return 0;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.coal.controller;
 
 
+import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.DriverOrder;
 import com.example.coal.bean.FactoryOrder;
 import com.example.coal.server.DriverOrderServer;
@@ -88,48 +89,79 @@ public class DriverOrderController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/editDriOrderArriveFFDate",method = RequestMethod.POST)
+    @RequestMapping(path = "/editDriOrderArriveFFInfo",method = RequestMethod.POST)
     @ApiOperation(" 修改到卖家厂时间，操作员，皮重等等")
-    public int editDriOrderArriveFFDate(@RequestParam int order_id, @RequestParam Date order_arriveffactorydate,
+    public int editDriOrderArriveFFInfo(@RequestParam int order_id,
                                         @RequestParam int order_fedituserid1,@RequestParam float pz){
 //        获得订单信息
         DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
+        //获得当前时间
+        Timestamp order_arriveffactorydate = TimeUtils.getNowDate();
         driOrderInfo.setOrder_arriveffactorydate(order_arriveffactorydate);
+        //注入操作员id
         driOrderInfo.setOrder_fedituserid1(order_fedituserid1);
+        //修改皮重
         driOrderInfo.setOrder_pz(pz);
+        //修改状态
+        driOrderInfo.setOrder_state(2);
         return driverOrderServer.editDriOrderInfo(driOrderInfo);
     }
 
 
     /***
-     * Data 在swagger中的测试Mon Oct 29 17:16:04 CST 2018
+     * Data 在在Java中注入
      */
     @ResponseBody
-    @RequestMapping(path = "/editDriOrderLeaveFFDate",method = RequestMethod.POST)
-    @ApiOperation("修改到卖家厂时间，操作员，离厂毛重等等")
-    public int editDriOrderLeaveFFDate(@RequestParam int order_id, @RequestParam Date order_leaveffactorydate,
-                                       @RequestParam int order_fedituserid2,@RequestParam float mz){
+    @RequestMapping(path = "/editDriOrderLeaveFFInfo",method = RequestMethod.POST)
+    @ApiOperation("修改离开卖家厂时间，操作员，离厂毛重等等")
+    public int editDriOrderLeaveFFInfo(@RequestParam int order_id,@RequestParam int order_fedituserid2,@RequestParam float weightNow){
 //        获得订单信息
         DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
+        System.out.println(driOrderInfo);
+        //注入id
+        driOrderInfo.setId(order_id);
+        //获得当前时间
+        Timestamp order_leaveffactorydate = TimeUtils.getNowDate();
+        //注入当前时间
         driOrderInfo.setOrder_leaveffactorydate(order_leaveffactorydate);
+//        注入操作员id
         driOrderInfo.setOrder_fedituserid2(order_fedituserid2);
+        //修改状态
+        driOrderInfo.setOrder_state(3);
+//        注入毛重1
+        float mz = weightNow - driOrderInfo.getOrder_pz();
         driOrderInfo.setOrder_mz(mz);
         return driverOrderServer.editDriOrderInfo(driOrderInfo);
     }
 
     @ResponseBody
-    @RequestMapping(path = "/editDriOrderEndDate",method = RequestMethod.POST)
+    @RequestMapping(path = "/editDriOrderEndInfo",method = RequestMethod.POST)
     @ApiOperation("修改到达买家工厂（结束）时间，操作员，到厂毛重,是否准时，评价星级，状态")
-    public int editDriOrderEndDate(@RequestParam int order_id, @RequestParam Date order_enddate,
-                                   @RequestParam int order_tedituserid,@RequestParam float mz2,
-                                   @RequestParam int order_star,@RequestParam int order_notime){
+    public int editDriOrderEndInfo(@RequestParam int order_id,
+                                   @RequestParam int order_tedituserid,@RequestParam float weightNow,
+                                   @RequestParam int order_star){
 //        获得订单信息
         DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
+        //获得订单要求时间
+        FactoryOrder facOrderInfo = (FactoryOrder)new FacOrderServer().getFacOrderInfo(driOrderInfo.getFactory_orderid()).get("facOrderInfo");
+        int order_transporttime = facOrderInfo.getOrder_transporttime();
+        //获得当前时间
+        Timestamp order_enddate = TimeUtils.getNowDate();
         driOrderInfo.setOrder_enddate(order_enddate);
+        //注入操作员id
         driOrderInfo.setOrder_tedituserid(order_tedituserid);
+        //计算毛重2
+        float mz2 = weightNow - driOrderInfo.getOrder_pz();
         driOrderInfo.setOrder_mz2(mz2);
-        driOrderInfo.setOrder_state(order_star);
-        driOrderInfo.setOrder_ontime(order_notime);
+        //评价星级
+        driOrderInfo.setOrder_star(order_star);
+        //计算小时差
+        Timestamp orderEnddate = TimeUtils.getNowDate();  //当前时间
+        Date order_startdate = driOrderInfo.getOrder_startdate();
+        //注入是否准时
+        driOrderInfo.setOrder_ontime(TimeUtils.ifOntime(orderEnddate,order_startdate,order_transporttime));
+        //修改状态
+        driOrderInfo.setOrder_state(0);
         return driverOrderServer.editDriOrderInfo(driOrderInfo);
     }
 

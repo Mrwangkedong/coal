@@ -326,7 +326,7 @@ public class FacOrderServer{
      * 获得工厂订单的子订单列表【司机姓名，司机手机号，订单id，订单经纬度，当前所在地，当前状态，距离始发地/目的地距离】
      * @param fac_orderId 工厂订单id
      */
-    public List<Map<String ,Object>> getFacOrderSonOrder(int fac_orderId) throws JSONException {
+    public List<Map<String ,Object>> getFacOrderSonOrder(int fac_orderId) {
         //定义List
         List<Map<String ,Object>> sonOrderList = new ArrayList<>();
         //获得List<DriverOrder>
@@ -334,7 +334,7 @@ public class FacOrderServer{
         //进行facOrderSonOrders遍历
         for (DriverOrder facOrderSonOrder : facOrderSonOrders) {
             //获得子订单id，司机id
-            int dri_orderId = facOrderSonOrder.getDriver_id();
+            int dri_orderId = facOrderSonOrder.getId();
             int driver_id = facOrderSonOrder.getDriver_id();
             //通过子订单司机id获得司机姓名，电话号码
             DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);
@@ -363,14 +363,11 @@ public class FacOrderServer{
             map.put("d_state",order_state);
             map.put("order_startdate",order_startdate);
             if (order_state == 1){
-                String s = "距离卖家工厂"+String.valueOf(FFDistance)+"Km";
-                map.put("d_distance",s);
+                map.put("d_distance",FFDistance);
             }else if (order_state == 2){
-                String s = "距离买家工厂"+String.valueOf(FTDistance)+"Km";
-                map.put("d_distance",s);
+                map.put("d_distance",FTDistance);
             }else if (order_state == 3){
-                String s = "距离买家工厂"+String.valueOf(FTDistance)+"Km";
-                map.put("d_distance",s);
+                map.put("d_distance",FTDistance);
             }else {
                 String s = "已送达";
                 map.put("d_distance",s);

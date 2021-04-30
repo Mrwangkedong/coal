@@ -297,8 +297,8 @@ public class DriverOrderServer {
         //通过订单信息，获得工厂订单一些信息[订单单价，双方工厂名称]
         int factory_orderid = driOrderInfo.getFactory_orderid();
         FactoryOrder facOrderInfo = (FactoryOrder) new FacOrderServer().getFacOrderInfo(factory_orderid).get("facOrderInfo");
-        String ffName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ffName");
-        String ftName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ftName");
+        String ffName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ff_name");
+        String ftName = (String) new FacOrderServer().getFacOrderInfo(factory_orderid).get("ft_name");
         float order_goodprice = facOrderInfo.getOrder_goodprice();
         //通过订单信息，获得司机的一些信息【司机姓名，司机手机号码】
         int driver_id = driOrderInfo.getDriver_id();
