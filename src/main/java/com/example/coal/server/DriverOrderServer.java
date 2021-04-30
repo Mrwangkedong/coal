@@ -2,11 +2,13 @@ package com.example.coal.server;
 
 
 import com.example.coal.Utils.DistanceUtil;
+import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.*;
 import com.example.coal.dao.DriverOrderMapper;
 import com.example.coal.dao.FacOrderMapper;
 import com.example.coal.dao.UserBillMapper;
 import com.example.coal.dao.UserWalletMapper;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -323,7 +325,41 @@ public class DriverOrderServer {
         return map;
     }
 
-
+    /**
+     * 修改到达买家工厂（结束）时间，操作员，到厂毛重,是否准时，评价星级，状态
+     * @param order_id 订单id
+     * @param order_tedituserid 操作员id
+     * @param weightNow 当前重量
+     * @param order_star 评价星级
+     * @return
+     */
+    public int editDriOrderEndInfo( int order_id, int order_tedituserid,float weightNow, int order_star){
+        //        获得订单信息
+        DriverOrder driOrderInfo = new DriverOrderServer().getDriOrderInfo(order_id);
+        //获得订单要求时间
+        FactoryOrder facOrderInfo = (FactoryOrder)new FacOrderServer().getFacOrderInfo(driOrderInfo.getFactory_orderid()).get("facOrderInfo");
+        int order_transporttime = facOrderInfo.getOrder_transporttime();
+        //获得当前时间
+        Timestamp order_enddate = TimeUtils.getNowDate();
+        driOrderInfo.setOrder_enddate(order_enddate);
+        //注入操作员id
+        driOrderInfo.setOrder_tedituserid(order_tedituserid);
+        //计算毛重2
+        float mz2 = weightNow - driOrderInfo.getOrder_pz();
+        driOrderInfo.setOrder_mz2(mz2);
+        //评价星级
+        driOrderInfo.setOrder_star(order_star);
+        //计算小时差
+        Timestamp orderEnddate = TimeUtils.getNowDate();  //当前时间
+        Date order_startdate = driOrderInfo.getOrder_startdate();
+        //注入是否准时
+        driOrderInfo.setOrder_ontime(TimeUtils.ifOntime(orderEnddate,order_startdate,order_transporttime));
+        //修改状态
+        driOrderInfo.setOrder_state(0);
+        //获得司机修改结果
+        int i = mapper.editDriOrderInfo(driOrderInfo);
+        return new DriverOrderServer().editDriOrderInfo(driOrderInfo);
+    }
 
 
 

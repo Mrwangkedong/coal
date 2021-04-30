@@ -91,7 +91,6 @@ public class FacOrderServer{
             maps.add(map);
         }
 
-
         return maps;
     }
 
@@ -267,7 +266,6 @@ public class FacOrderServer{
         FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
         //更改订单的状态信息,2(待确认)->1(接单/进行)
         facOrderInfo.setOrder_state(1);
-
         /*
          * 此处应有转账
          */
@@ -409,7 +407,10 @@ public class FacOrderServer{
         return floatList;
     }
 
-
+    /***
+     * 获得工厂订单的子订单列表【司机姓名，司机手机号，订单id，订单经纬度，当前所在地，当前状态，距离始发地/目的地距离】
+     * @param fac_orderId 工厂订单id
+     */
     public List<Map<String,Object>> getFacOrderSonOrderEd(int fac_orderId){
         //定义List
         List<Map<String ,Object>> sonOrderList = new ArrayList<>();
@@ -454,7 +455,6 @@ public class FacOrderServer{
 
         return sonOrderList;
     }
-
 
 
     public static void main(String[] args) {

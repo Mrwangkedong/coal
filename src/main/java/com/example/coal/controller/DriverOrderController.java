@@ -140,29 +140,9 @@ public class DriverOrderController {
     public int editDriOrderEndInfo(@RequestParam int order_id,
                                    @RequestParam int order_tedituserid,@RequestParam float weightNow,
                                    @RequestParam int order_star){
-//        获得订单信息
-        DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
-        //获得订单要求时间
-        FactoryOrder facOrderInfo = (FactoryOrder)new FacOrderServer().getFacOrderInfo(driOrderInfo.getFactory_orderid()).get("facOrderInfo");
-        int order_transporttime = facOrderInfo.getOrder_transporttime();
-        //获得当前时间
-        Timestamp order_enddate = TimeUtils.getNowDate();
-        driOrderInfo.setOrder_enddate(order_enddate);
-        //注入操作员id
-        driOrderInfo.setOrder_tedituserid(order_tedituserid);
-        //计算毛重2
-        float mz2 = weightNow - driOrderInfo.getOrder_pz();
-        driOrderInfo.setOrder_mz2(mz2);
-        //评价星级
-        driOrderInfo.setOrder_star(order_star);
-        //计算小时差
-        Timestamp orderEnddate = TimeUtils.getNowDate();  //当前时间
-        Date order_startdate = driOrderInfo.getOrder_startdate();
-        //注入是否准时
-        driOrderInfo.setOrder_ontime(TimeUtils.ifOntime(orderEnddate,order_startdate,order_transporttime));
-        //修改状态
-        driOrderInfo.setOrder_state(0);
-        return driverOrderServer.editDriOrderInfo(driOrderInfo);
+
+        //修改司机订单信息
+    return driverOrderServer.editDriOrderEndInfo(order_id,order_tedituserid,weightNow,order_star);
     }
 
     @ResponseBody
