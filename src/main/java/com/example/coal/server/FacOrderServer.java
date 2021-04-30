@@ -248,13 +248,16 @@ public class FacOrderServer{
      * @return 1/0
      */
     public int addNewFacOrder(FactoryOrder factoryOrder){
+        //订单添加
         int i = mapper.addNewFacOrder(factoryOrder);
-        if (i==1){
+        //增加新的消息
+        int i2 = new FacMessageServer().addNewMessage(factoryOrder.getFt_id(), factoryOrder.getFf_id(), "接受发起的订单");
+        if (i==1 && i2==1){
             sqlsession.commit();
-        }
-        return i;
+            return 1;
+        }else
+            return 0;
     }
-
 
     /***
      * 工厂订单接受
@@ -270,7 +273,16 @@ public class FacOrderServer{
          * 此处应有转账
          */
 
-        return new FacOrderServer().editFacOrder(facOrderInfo);
+        //进行消息通知
+        int i = new FacMessageServer().addNewMessage(facOrderInfo.getFt_id(), facOrderInfo.getFf_id(), "接受发起的订单");
+        //进行工厂订单修改
+        int i2 = mapper.editFacOrder(facOrderInfo);
+        if (i == 1 && i2 == 1){
+            sqlsession.commit();
+            return 1;
+        }else {
+            return 0;
+        }
     }
 
     /***
@@ -284,12 +296,21 @@ public class FacOrderServer{
         //更改订单的状态信息,2(待确认)->4(拒绝/进行)
         facOrderInfo.setOrder_state(4);   //订单状态
         facOrderInfo.setOrder_refuseReason(order_refuseReason);  //拒绝原因
+        //进行消息通知
+        int i = new FacMessageServer().addNewMessage(facOrderInfo.getFt_id(), facOrderInfo.getFf_id(), "拒绝发起的订单");
 
         /*
         此处应有转账
          */
 
-        return new FacOrderServer().editFacOrder(facOrderInfo);
+        int i2 = mapper.editFacOrder(facOrderInfo);
+        if (i == 1 && i2 == 1){
+            sqlsession.commit();
+            return 1;
+        }else {
+            return 0;
+        }
+
     }
 
     /***

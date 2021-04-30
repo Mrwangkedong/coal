@@ -3,6 +3,7 @@ package com.example.coal.controller;
 
 import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.FactoryOrder;
+import com.example.coal.server.FacMessageServer;
 import com.example.coal.server.FacOrderServer;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -96,19 +97,21 @@ public class FacOrderController {
         factoryOrder.setOrder_targetcarnum(targetGoodNum);
         factoryOrder.setOrder_transporttime(targetTransportTime);
         factoryOrder.setOrder_goodprice(goodPrice);
-        //进行状态赋值
+        //进行状态赋值（待确认）
         factoryOrder.setOrder_state(2);
         //开始时间赋值
         factoryOrder.setOrder_startdate(TimeUtils.getNowDate());
+        //进行message通知
+        int i = new FacMessageServer().addNewMessage(ff_id, ft_id, "发起新的订单");
         //进行添加
         return facOrderServer.addNewFacOrder(factoryOrder);
-
     }
 
     @ResponseBody
     @RequestMapping(path = "/facOrderJieshou",method = RequestMethod.POST)
     @ApiOperation("买家工厂接收新的订单")
     int facOrderJieshou(@RequestParam int fac_orderID){
+
         return facOrderServer.facOrderJieshou(fac_orderID);
     }
 
@@ -116,6 +119,7 @@ public class FacOrderController {
     @RequestMapping(path = "/facOrderJujue",method = RequestMethod.POST)
     @ApiOperation("买家工厂拒绝新的订单，并给出拒绝理由")
     int facOrderJujue(int fac_orderID,String order_refuseReason){
+
         return facOrderServer.facOrderJujue(fac_orderID,order_refuseReason);
     }
 

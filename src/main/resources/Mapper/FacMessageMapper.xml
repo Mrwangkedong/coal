@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.coal.bean.FactoryMessage">
+<mapper namespace="com.example.coal.dao.FacMessageMapper">
     <insert id="addNewMessage" parameterType="com.example.coal.bean.FactoryMessage">
-        insert into factory_message (from_id,to_id,messageState,content,messageDate)
-        values (#{from_id},#{to_id},1,#{content},#{messageDate});
+        insert into factory_message (from_id,to_id,messageState,from_name,messageDate,content)
+        values (#{from_id},#{to_id},1,#{from_name},#{messageDate},#{content});
     </insert>
     
     <update id="editMessage" parameterType="int">

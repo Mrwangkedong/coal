@@ -4,7 +4,7 @@ import com.example.coal.bean.FactoryMessage;
 
 import java.util.List;
 
-public interface FacMessage {
+public interface FacMessageMapper {
     /**
      * 增加新的消息
      * @param factoryMessage 消息实体
