@@ -7,8 +7,8 @@
     </select>
 
     <insert id="addNewWallet">
-        insert into user_wallet (user_id, wallet_state, wallet_money)
-        values (#{user_id},#{wallet_state},0);
+        insert into user_wallet (user_id, wallet_state, wallet_money,bcard_name,bcard_pcardnum)
+        values (#{user_id},#{wallet_state},0,#{userName},#{BcardNum});
     </insert>
 
     <update id="editWalletInfoDri" parameterType="com.example.coal.bean.UserWallet">
@@ -20,5 +20,17 @@
             bcard_pcardnum = #{bcard_pcardnum}
         where user_id = #{user_id} and wallet_state = #{wallet_state};
     </update>
+
+
+    <update id="editWalletBcardInfo" parameterType="com.example.coal.bean.UserWallet">
+        update user_wallet
+        set bcard_photo = #{bcard_photo},
+            bcard_number = #{bcard_number},
+            wallet_money = #{wallet_money},
+            bcard_name = #{bcard_name},
+            bcard_pcardnum = #{bcard_pcardnum}
+        where user_id = #{user_id} and wallet_state = #{wallet_state};
+    </update>
+
 
 </mapper>

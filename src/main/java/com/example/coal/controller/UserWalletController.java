@@ -7,9 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Map;
+
 @Controller
 @EnableSwagger2
 @CrossOrigin(origins = "*",maxAge = 3600)
+@ApiOperation("用户账钱包信息")
 public class UserWalletController {
 
     UserWalletServer userWalletServer = new UserWalletServer();
@@ -51,9 +54,33 @@ public class UserWalletController {
         return userWalletServer.editWalletMoney(user_id,wallet_state,editMoney);
     }
 
+    @ResponseBody
+    @ApiOperation("获取当前用户的wallet信息，精简版")
+    @RequestMapping(path = "/getUserWalletInfo2",method = RequestMethod.POST)
+    public Map<String,Object> getUserWalletInfo2(@RequestParam int user_id, @RequestParam int user_state){
+        return userWalletServer.getUserWalletInfo2(user_id,user_state);
+    }
 
+    @ResponseBody
+    @ApiOperation("用户绑定/修改银行卡")
+    @RequestMapping(path = "/addUserWallet",method = RequestMethod.POST)
+    public int addUserWallet(int user_id,int wallet_state,String userName,String BcardNum){
+        return userWalletServer.addUserWallet(user_id,wallet_state,userName,BcardNum);
+    }
 
+    @ResponseBody
+    @ApiOperation("增加余额【充值，订单金额返还】")
+    @RequestMapping(path = "/addWalletMoney",method = RequestMethod.POST)
+    public int addWalletMoney(int user_id,int wallet_state,float moneyNum,int billState){
+        return userWalletServer.addWalletMoney(user_id,wallet_state,moneyNum,billState);
+    }
 
+    @ResponseBody
+    @ApiOperation("减少余额")
+    @RequestMapping(path = "/reduceWalletMoney",method = RequestMethod.POST)
+    public int reduceWalletMoney(int user_id,int wallet_state,float moneyNum,int billState){
+        return userWalletServer.reduceWalletMoney(user_id,wallet_state,moneyNum,billState);
+    }
 
 
 

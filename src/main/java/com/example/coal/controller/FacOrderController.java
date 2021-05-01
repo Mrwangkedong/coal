@@ -93,16 +93,16 @@ public class FacOrderController {
         factoryOrder.setFt_id(ft_id);
         factoryOrder.setOrder_carclass(carClass);
         factoryOrder.setOrder_goodclass(goodClass);
-        factoryOrder.setOrder_actualcarnum(targetCarNum);
-        factoryOrder.setOrder_targetcarnum(targetGoodNum);
+        factoryOrder.setOrder_targetcarnum(targetCarNum);
+        factoryOrder.setOrder_targetweight(targetGoodNum);
         factoryOrder.setOrder_transporttime(targetTransportTime);
         factoryOrder.setOrder_goodprice(goodPrice);
         //进行状态赋值（待确认）
         factoryOrder.setOrder_state(2);
         //开始时间赋值
         factoryOrder.setOrder_startdate(TimeUtils.getNowDate());
-        //进行message通知
-        int i = new FacMessageServer().addNewMessage(ff_id, ft_id, "发起新的订单");
+
+
         //进行添加
         return facOrderServer.addNewFacOrder(factoryOrder);
     }

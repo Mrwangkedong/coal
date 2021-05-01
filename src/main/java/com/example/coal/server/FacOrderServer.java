@@ -252,7 +252,20 @@ public class FacOrderServer{
         int i = mapper.addNewFacOrder(factoryOrder);
         //增加新的消息
         int i2 = new FacMessageServer().addNewMessage(factoryOrder.getFt_id(), factoryOrder.getFf_id(), "接受发起的订单");
-        if (i==1 && i2==1){
+        /*
+        进行资金的减少  i4
+         */
+        System.out.println(factoryOrder);
+        float orderMoney = factoryOrder.getOrder_goodprice() * factoryOrder.getOrder_targetweight();
+        int i4 = new UserWalletServer().reduceWalletMoney(factoryOrder.getFf_id(), 2, orderMoney, 1);
+        if (i4 == 2 || i4==3){
+            return i4;          //如果未绑定银行卡或者是余额不足的直接返回
+        }
+        /*
+        进行message通知  i3
+         */
+        int i3 = new FacMessageServer().addNewMessage(factoryOrder.getFf_id(), factoryOrder.getFt_id(), "发起新的订单");
+        if (i==1 && i2==1 && i3==1 && i4 ==1){
             sqlsession.commit();
             return 1;
         }else

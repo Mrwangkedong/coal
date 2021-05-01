@@ -217,6 +217,10 @@ public class DriverOrderServer {
         int order_targetcarnum = facOrderInfo.getOrder_targetcarnum();
         //如果实际车辆数错误，返回2
         if (order_actualcarnum >= order_targetcarnum){
+            /*
+            在这里进行工厂订单结束接单的修改 1-->3
+             */
+
             return 2;       //返回2，说明实际数量已经够了
         }else {
             //更改实际车辆数
