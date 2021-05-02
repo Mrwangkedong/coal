@@ -29,4 +29,16 @@
         where id = #{id};
     </update>
 
+    <insert id="addFacInfo" parameterType="com.example.coal.bean.FactoryMsg">
+        insert into factory_msg (name, factory_address, factory_ifpass, factory_longitude, factory_latitude,
+                                 factory_lpname,factory_lpcardnum)
+        values (#{name}, #{factory_address}, #{factory_ifpass}, #{factory_longitude}, #{factory_latitude},
+                #{factory_lpname},#{factory_lpcardnum});
+    </insert>
+    
+    <select id="exitFac" resultType="com.example.coal.bean.FactoryMsg">
+        select *
+        from factory_msg where factory_lpname = #{lpName} and name = #{facName};
+    </select>
+
 </mapper>

@@ -2,8 +2,10 @@ package com.example.coal.controller;
 
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryQualified;
+import com.example.coal.bean.FactoryStaff;
 import com.example.coal.server.FacMsgServer;
 import com.example.coal.server.FacQuaServer;
+import com.example.coal.server.FacStaffServer;
 import org.springframework.util.ClassUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,26 +144,62 @@ public class FacMsgController {
         return facMsgServer.getFacNameById(fac_id);
     }
 
-    @PostMapping(value = "/upimg")
     @ResponseBody
-    public Map<String,Object> userupimg(@RequestParam(value = "file") MultipartFile file ,HttpServletRequest request) throws IOException {
+    @ApiOperation("新增工厂申请")
+    @PostMapping("/addNewFactory")
+    public int addNewFactory(MultipartFile[] facImg,HttpServletRequest request) throws IOException {
 
+        String facName = request.getParameter("facName");
+        String factory_lpname = request.getParameter("factory_lpname");
+        String factory_lpcardnum = request.getParameter("factory_lpcardnum");
+        float factory_longitude = Float.parseFloat(request.getParameter("factory_longitude"));
+        float factory_latitude = Float.parseFloat(request.getParameter("factory_latitude"));
+        String factory_address = request.getParameter("factory_address");
+        int fac_id = facMsgServer.addFacInfo(facName, factory_lpname, factory_lpcardnum, factory_longitude, factory_latitude, factory_address);
+        if (fac_id == 0 || fac_id == 2){
+            return fac_id;
+        }
+        /*
+        添加工厂管理员员工！！！！！
+         */
+        String manage_name = request.getParameter("manage_name");
+        String manage_phoneNum = request.getParameter("manage_phoneNum");
+        String manage_password = request.getParameter("manage_password");
+        FactoryStaff factoryStaff = new FactoryStaff();
+        factoryStaff.setStaff_name(manage_name);
+        factoryStaff.setFactory_id(fac_id);
+        factoryStaff.setStaff_phonenum(manage_phoneNum);
+        factoryStaff.setStaff_password(manage_password);
+        int i1 = new FacStaffServer().addNewStaff(factoryStaff);
+        if (i1==0){
+            return 0;
+        }
+        /*
+         * 返回得到的id，添加照片到指定路径
+         */
+        String pathStatic = "G:\\coal\\src\\main\\resources\\static";
+        // 图片存储目录及图片名称（存数据库的）、图片保存路径(营业许可)
+        String url_path_licencePhoto = "qualified" + File.separator + "facImg" + File.separator + "licencePhoto" + File.separator + String.valueOf(fac_id)+".png";
+        String savePath_url_path_licencePhoto = pathStatic + File.separator + url_path_licencePhoto;
+        facImg[0].transferTo(new File(savePath_url_path_licencePhoto));
+        //        （身份证正面）
+        String url_path_lPcardPhoto1 = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto1" + File.separator + String.valueOf(fac_id)+".png";
+        String savePath_url_path_lPcardPhoto1 = pathStatic + File.separator + url_path_lPcardPhoto1;
+        facImg[1].transferTo(new File(savePath_url_path_lPcardPhoto1));
+        //         （身份证反面）
+        String url_path_lPcardPhoto2 = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto2" + File.separator + String.valueOf(fac_id)+".png";
+        String savePath_url_path_lPcardPhoto2 = pathStatic + File.separator + url_path_lPcardPhoto2;
+        facImg[2].transferTo(new File(savePath_url_path_lPcardPhoto2));
+        FactoryMsg facInfo = facMsgServer.getFacInfo(fac_id);
+        facInfo.setFactory_licencephoto(url_path_licencePhoto);
+        facInfo.setFactory_lpcardphoto1(url_path_lPcardPhoto1);
+        facInfo.setFactory_lpcardphoto2(url_path_lPcardPhoto2);
+        int i = facMsgServer.editFacMsg(facInfo);
+        if (i==0){
+            return i;
+        }
 
-
-        String name = (String)request.getParameter("name");
-        //输出接收到的name
-        System.out.println(name);
-        Map<String,Object> map = new HashMap<>();
-//        String filename = UUID.randomUUID().toString().replaceAll("-", "");
-        String filename = "111222333";
-//        String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        String ext = "png";
-        String filenames = filename + "." + ext;
-        String pathname = "G:\\imgs\\" + filenames;
-        file.transferTo(new File(pathname));
-        map.put("src",filenames);
-        map.put("code",0);
-        return map;
+        return 1;
     }
 
 

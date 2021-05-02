@@ -35,6 +35,42 @@ public class FacMsgServer {
         return facInfo.getName();
     }
 
+    /**
+     * 增加新的工厂
+     * @param facName 工厂名称
+     * @param factory_lpname 工厂法人姓名
+     * @param factory_lpcardnum 工厂法人身份证
+     * @param factory_longitude 工厂经度
+     * @param factory_latitude 工厂纬度
+     * @param factory_address 工厂地址
+     * @return 新建数据id   0-->已存在  2-->添加失败
+     */
+    public int addFacInfo(String facName,String factory_lpname,String factory_lpcardnum,
+                          float factory_longitude,float factory_latitude,String factory_address){
+//        根据工厂名称和法人查，是否已存在工厂
+        FactoryMsg factoryMsg1 = mapper.exitFac(factory_lpname, facName);
+        if (factoryMsg1 != null){
+            return 0;
+        }
+        //新建一个FacMsg
+        FactoryMsg factoryMsg = new FactoryMsg();
+        factoryMsg.setName(facName);
+        factoryMsg.setFactory_lpname(factory_lpname);
+        factoryMsg.setFactory_lpcardnum(factory_lpcardnum);
+        factoryMsg.setFactory_longitude(factory_longitude);
+        factoryMsg.setFactory_latitude(factory_latitude);
+        factoryMsg.setFactory_address(factory_address);
+        factoryMsg.setFactory_ifpass(2);  //2表示申请中
+        int i = mapper.addFacInfo(factoryMsg);
+        if (i==1) {
+            sqlsession.commit();
+            factoryMsg1 = mapper.exitFac(factory_lpname, facName);
+            return factoryMsg1.getId();
+        }else
+            return 2;
+
+    }
+
     /****
      * 根据工厂订单id获得双方工厂的name
      * @param fac_orederID 工厂订单id

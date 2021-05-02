@@ -7,6 +7,21 @@ import java.util.List;
 
 public interface FacMsgMapper {
 
+    /**
+     * 添加新的工厂
+     * @param factoryMsg 工厂信息实体
+     * @return 1/0
+     */
+    int addFacInfo(FactoryMsg factoryMsg);
+
+    /**
+     * 根据法人姓名和工厂名称，查看是否已经存在
+     * @param lpName 法人姓名
+     * @param facName 工厂名称
+     * @return
+     */
+    FactoryMsg exitFac(String lpName,String facName);
+
     /***
      * 获得工厂的具体信息
      * @param fac_id 工厂id
