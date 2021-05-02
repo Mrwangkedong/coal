@@ -250,12 +250,9 @@ public class FacOrderServer{
     public int addNewFacOrder(FactoryOrder factoryOrder){
         //订单添加
         int i = mapper.addNewFacOrder(factoryOrder);
-        //增加新的消息
-        int i2 = new FacMessageServer().addNewMessage(factoryOrder.getFt_id(), factoryOrder.getFf_id(), "接受发起的订单");
         /*
         进行资金的减少  i4
          */
-        System.out.println(factoryOrder);
         float orderMoney = factoryOrder.getOrder_goodprice() * factoryOrder.getOrder_targetweight();
         int i4 = new UserWalletServer().reduceWalletMoney(factoryOrder.getFf_id(), 2, orderMoney, 1);
         if (i4 == 2 || i4==3){
@@ -265,7 +262,7 @@ public class FacOrderServer{
         进行message通知  i3
          */
         int i3 = new FacMessageServer().addNewMessage(factoryOrder.getFf_id(), factoryOrder.getFt_id(), "发起新的订单");
-        if (i==1 && i2==1 && i3==1 && i4 ==1){
+        if (i==1 && i3==1 && i4 ==1){
             sqlsession.commit();
             return 1;
         }else
@@ -313,11 +310,13 @@ public class FacOrderServer{
         int i = new FacMessageServer().addNewMessage(facOrderInfo.getFt_id(), facOrderInfo.getFf_id(), "拒绝发起的订单");
 
         /*
-        此处应有转账
+        进行资金的减少  i4
          */
+        float orderMoney = facOrderInfo.getOrder_goodprice() * facOrderInfo.getOrder_targetweight();
+        int i3 = new UserWalletServer().addWalletMoney(facOrderInfo.getFf_id(), 2, orderMoney, 1);
 
         int i2 = mapper.editFacOrder(facOrderInfo);
-        if (i == 1 && i2 == 1){
+        if (i == 1 && i2 == 1 && i3==1){
             sqlsession.commit();
             return 1;
         }else {

@@ -34,8 +34,10 @@ public class FactoryOrder{
     private String order_refuseReason;
 //    目标煤炭总重量
     private float order_targetweight;
-//    实际煤炭总重量
+//    实际煤炭总重量（离ff厂总重量）
     private float order_actualweight;
+//    实际煤炭总重量（到ft厂总重量）
+    private float order_actualweight2;
 //    卖方工厂发起员工id
     private int order_fstartuserid;
 //    规定运输时间！！！

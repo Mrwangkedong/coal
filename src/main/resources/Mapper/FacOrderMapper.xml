@@ -32,7 +32,8 @@
             order_refuseReason = #{order_refuseReason},
             order_endupdate = #{order_endupdate},
             order_actualcarnum = #{order_actualcarnum},
-            order_actualweight = #{order_actualweight}
+            order_actualweight = #{order_actualweight},
+            order_actualweight2 = #{order_actualweight2}
         where id=#{id};
     </update>
 

@@ -134,6 +134,12 @@ public class FacMsgController {
         return map;
     }
 
+    @ResponseBody
+    @ApiOperation("根据工厂id获得工厂名称")
+    @PostMapping(path = "/getFacNameById")
+    public String getFacNameById(@RequestParam int fac_id){
+        return facMsgServer.getFacNameById(fac_id);
+    }
 
     @PostMapping(value = "/upimg")
     @ResponseBody

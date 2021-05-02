@@ -25,6 +25,16 @@ public class FacMsgServer {
         return mapper.getFacInfo(fac_id);
     }
 
+    /**
+     * 根据工厂id，获得工厂名称
+     * @param fac_id 工厂id
+     * @return 工厂名称
+     */
+    public String getFacNameById(int fac_id){
+        FactoryMsg facInfo = getFacInfo(fac_id);
+        return facInfo.getName();
+    }
+
     /****
      * 根据工厂订单id获得双方工厂的name
      * @param fac_orederID 工厂订单id
