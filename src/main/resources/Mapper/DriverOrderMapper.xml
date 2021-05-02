@@ -33,7 +33,8 @@
 
     <!--    添加新的司机订单（司机id，工厂订单）{司机id，工厂订单id，保证金额，状态1}-->
     <insert id="addDriOrderInfo" parameterType="map">
-        insert into driver_order(driver_id,factory_orderid,order_startdate,order_ensuremoney,order_state) value (#{driver_id},#{factory_orderid},#{order_startdate},#{order_ensuremoney},1)
+        insert into driver_order(driver_id,factory_orderid,order_startdate,order_ensuremoney,order_state,order_longitude,order_latitude)
+        value (#{driver_id},#{factory_orderid},#{order_startdate},#{order_ensuremoney},1,#{order_latitude},#{order_latitude})
     </insert>
 
 <!--    // 修改司机进行中订单信息（到/离厂时间，操作员等等）-->

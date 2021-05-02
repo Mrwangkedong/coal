@@ -61,7 +61,9 @@ public class DriverOrderController {
     @ApiOperation("添加新的订单")
     public int addDriOrderInf(@ApiParam("输入一个司机id")@RequestParam int driver_id,
                               @ApiParam("输入一个工厂订单id")@RequestParam int factory_orderid,
-                              @ApiParam("输入保证金")@RequestParam float order_ensuremoney){
+                              @ApiParam("输入保证金")@RequestParam float order_ensuremoney,
+                              @ApiParam("输入当前经度")@RequestParam float order_longitude,
+                              @ApiParam("输入当前纬度")@RequestParam float order_latitude){
         Map<String ,Object> map = new HashMap<>();
         map.put("driver_id",driver_id);
         map.put("factory_orderid",factory_orderid);
@@ -69,6 +71,8 @@ public class DriverOrderController {
         java.util.Date date = new java.util.Date();          // 获取一个Date对象
         Timestamp order_startdate = new Timestamp(date.getTime());     //   讲日期时间转换为数据库中的timestamp类型
         map.put("order_startdate",order_startdate);
+        map.put("order_longitude",order_longitude);
+        map.put("order_latitude",order_latitude);
         return driverOrderServer.addDriOrderInfo(map);
     }
 
@@ -93,18 +97,7 @@ public class DriverOrderController {
     @ApiOperation(" 修改到卖家厂时间，操作员，皮重等等")
     public int editDriOrderArriveFFInfo(@RequestParam int order_id,
                                         @RequestParam int order_fedituserid1,@RequestParam float pz){
-//        获得订单信息
-        DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
-        //获得当前时间
-        Timestamp order_arriveffactorydate = TimeUtils.getNowDate();
-        driOrderInfo.setOrder_arriveffactorydate(order_arriveffactorydate);
-        //注入操作员id
-        driOrderInfo.setOrder_fedituserid1(order_fedituserid1);
-        //修改皮重
-        driOrderInfo.setOrder_pz(pz);
-        //修改状态
-        driOrderInfo.setOrder_state(2);
-        return driverOrderServer.editDriOrderInfo(driOrderInfo);
+        return driverOrderServer.editDriOrderArriveFFInfo(order_id,order_fedituserid1,pz);
     }
 
 
@@ -115,23 +108,8 @@ public class DriverOrderController {
     @RequestMapping(path = "/editDriOrderLeaveFFInfo",method = RequestMethod.POST)
     @ApiOperation("修改离开卖家厂时间，操作员，离厂毛重等等")
     public int editDriOrderLeaveFFInfo(@RequestParam int order_id,@RequestParam int order_fedituserid2,@RequestParam float weightNow){
-//        获得订单信息
-        DriverOrder driOrderInfo = driverOrderServer.getDriOrderInfo(order_id);
-        System.out.println(driOrderInfo);
-        //注入id
-        driOrderInfo.setId(order_id);
-        //获得当前时间
-        Timestamp order_leaveffactorydate = TimeUtils.getNowDate();
-        //注入当前时间
-        driOrderInfo.setOrder_leaveffactorydate(order_leaveffactorydate);
-//        注入操作员id
-        driOrderInfo.setOrder_fedituserid2(order_fedituserid2);
-        //修改状态
-        driOrderInfo.setOrder_state(3);
-//        注入毛重1
-        float mz = weightNow - driOrderInfo.getOrder_pz();
-        driOrderInfo.setOrder_mz(mz);
-        return driverOrderServer.editDriOrderInfo(driOrderInfo);
+
+        return driverOrderServer.editDriOrderLeaveFFInfo(order_id,order_fedituserid2,weightNow);
     }
 
     @ResponseBody

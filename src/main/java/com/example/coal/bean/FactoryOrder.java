@@ -24,8 +24,10 @@ public class FactoryOrder{
     private Date order_endupdate;
 //    目标车辆数
     private int order_targetcarnum;
-//    实际车辆数
+//    实际车辆数（接单）
     private int order_actualcarnum;
+//    实际车辆数（到达ft工厂）
+    private int order_actualcarnum2;
 //    规定车辆类型
     private int order_carclass;
 //    订单转态0/1/2:0表示结束；1表示接单/进行中；2表示待确认中；3表示接单完成进行中；4表示拒绝

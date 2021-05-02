@@ -325,6 +325,38 @@ public class FacOrderServer{
 
     }
 
+    /**
+     * 工厂订单结束
+     * @param fac_orderID 工厂订单id
+     * @return 1/0  2-->车辆没有全部结束
+     */
+    public int facOrderOver(int fac_orderID){
+        //通过工厂订单id获得工厂订单的具体信息
+        FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
+        int order_actualcarnum = facOrderInfo.getOrder_actualcarnum();
+        int order_actualcarnum2 = facOrderInfo.getOrder_actualcarnum2();
+        if (order_actualcarnum != order_actualcarnum2){
+            return 2;    //表示车辆还没有全部结束
+        }
+        /*
+        进行资金周转
+         */
+//        获得weight2，weight1
+        float order_actualweight = facOrderInfo.getOrder_actualweight();
+        float order_actualweight2 = facOrderInfo.getOrder_actualweight2();
+        float order_goodprice = facOrderInfo.getOrder_goodprice();
+        int ff_id = facOrderInfo.getFf_id();
+        if (order_actualweight2 < order_actualweight){
+            new UserWalletServer().addWalletMoney(ff_id,2,order_goodprice * (order_actualweight - order_actualweight2),1);
+        }
+        //进行订单状态转换
+        facOrderInfo.setOrder_state(0);
+        int i = mapper.editFacOrder(facOrderInfo);
+        if (i==1)
+            sqlsession.commit();
+        return i;
+    }
+
     /***
      * 获得工厂订单全部信息【包括子订单】
      * @param fac_orderID 工厂订单id
@@ -431,8 +463,8 @@ public class FacOrderServer{
         float distanceToFF = DistanceUtil.getDistance(driOrder_longitude, driOrder_latitude, ff_longitude, ff_latitude);
         //通过ft_id获得工厂信息并获得距离
         FactoryMsg ft_facInfo = new FacMsgServer().getFacInfo(ft_id);
-        float ft_longitude = ff_facInfo.getFactory_longitude();
-        float ft_latitude = ff_facInfo.getFactory_latitude();
+        float ft_longitude = ft_facInfo.getFactory_longitude();
+        float ft_latitude = ft_facInfo.getFactory_latitude();
         float distanceToFT = DistanceUtil.getDistance(driOrder_longitude, driOrder_latitude, ft_longitude, ft_latitude);
         List<Float> floatList = new ArrayList<>();
         floatList.add(distanceToFT);

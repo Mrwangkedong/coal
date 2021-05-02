@@ -113,6 +113,7 @@ public class UserWalletServer{
      * @param user_id 用户id
      * @param wallet_state 用户身份
      * @param moneyNum 钱数
+     * @param billState 账单类型（1：订单金额；2：充值金额）
      * @return 1/0  2-->未绑定银行卡
      */
     public int addWalletMoney(int user_id,int wallet_state,float moneyNum,int billState){
@@ -124,7 +125,11 @@ public class UserWalletServer{
             float moneyNow = userWalletInfo.getWallet_money();
             userWalletInfo.setWallet_money(moneyNow+moneyNum);
             int i = mapper.editWalletBcardInfo(userWalletInfo);
-            int i1 = reduceManageMoney(moneyNum);
+            int i1 = 1;
+            //如果是订单返现，则改变管理员余额，若是充值，不改变
+            if (billState == 1){
+                i1 = reduceManageMoney(moneyNum);
+            }
 
             /*
             账单增加

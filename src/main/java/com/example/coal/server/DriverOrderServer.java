@@ -186,6 +186,7 @@ public class DriverOrderServer {
      * 2：失败
      * 3：余额不足
      * 4：当前用户已存在订单
+     * 5: 未绑定银行卡
      */
     public int addDriOrderInfo(Map<String ,Object> map){
         //从map中获得信息
@@ -206,6 +207,9 @@ public class DriverOrderServer {
         //钱包Mapper
         UserWalletMapper userWalletMapper = sqlsession.getMapper(UserWalletMapper.class);
         UserWallet walletInfo = userWalletMapper.getWalletInfo(driver_id, 1);
+        if (walletInfo == null){
+            return 5;
+        }
         if (walletInfo.getWallet_money() < ensure_money){
             return 3;   //返回3，说明余额不足
         }
@@ -217,24 +221,31 @@ public class DriverOrderServer {
         int order_targetcarnum = facOrderInfo.getOrder_targetcarnum();
         //如果实际车辆数错误，返回2
         if (order_actualcarnum >= order_targetcarnum){
-            /*
-            在这里进行工厂订单结束接单的修改 1-->3
-             */
-
             return 2;       //返回2，说明实际数量已经够了
         }else {
             //更改实际车辆数
             order_actualcarnum = order_actualcarnum + 1;
             facOrderInfo.setOrder_actualcarnum(order_actualcarnum);
-
             //进行账单信息及钱包信息的更改
             int i2 = addDriEnsureBill((Float) map.get("order_ensuremoney"), driver_id, factory_orderid);
             //进行订单信息的更改
             int i1 = facOrderMapper.editFacOrder(facOrderInfo);
             //进行司机订单的添加
-            int i = this.mapper.addDriOrderInfo(map);
+            int i = mapper.addDriOrderInfo(map);
             if (i1 == 1 & i == 1 & i2 == 1){
                 sqlsession.commit();
+                //判断增加之后是否已经接单完成
+                if (order_actualcarnum == order_targetcarnum){
+                 /*
+                     在这里进行工厂订单结束接单的修改 1-->3
+                */
+                    facOrderInfo.setOrder_state(3);   //转化为接单完成/进行中
+                    facOrderInfo.setOrder_enddate(TimeUtils.getNowDate()); //注入当前时间
+                    int i3 = facOrderMapper.editFacOrder(facOrderInfo);
+                    if (i3==1){
+                        sqlsession.commit();
+                    }
+                }
                 return 1;
             }else {
                 return 0;
@@ -291,6 +302,78 @@ public class DriverOrderServer {
         }
         return i;
     }
+
+    /**
+     * 修改到卖家厂时间，操作员，皮重等等
+     * @param order_id 司机订单id
+     * @param order_fedituserid1 操作员id
+     * @param pz 皮重
+     * @return 1/0
+     */
+    public int editDriOrderArriveFFInfo( int order_id,
+                                         int order_fedituserid1, float pz){
+        //        获得订单信息
+        DriverOrder driOrderInfo = getDriOrderInfo(order_id);
+        //获得当前时间
+        Timestamp order_arriveffactorydate = TimeUtils.getNowDate();
+        driOrderInfo.setOrder_arriveffactorydate(order_arriveffactorydate);
+        //注入操作员id
+        driOrderInfo.setOrder_fedituserid1(order_fedituserid1);
+        //修改皮重
+        driOrderInfo.setOrder_pz(pz);
+        //修改状态
+        driOrderInfo.setOrder_state(2);
+        int i = mapper.editDriOrderInfo(driOrderInfo);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
+    /**
+     * 修改离开卖家厂时间，操作员，离厂毛重等等,同时修改工厂订单的order_actualweight
+     * @param order_id 司机订单id
+     * @param order_fedituserid2 操作员id
+     * @param weightNow 现在重量
+     * @return 1/0
+     */
+    public int editDriOrderLeaveFFInfo(@RequestParam int order_id,@RequestParam int order_fedituserid2,@RequestParam float weightNow){
+        //        获得订单信息
+        DriverOrder driOrderInfo = getDriOrderInfo(order_id);
+        //注入id
+        driOrderInfo.setId(order_id);
+        //获得当前时间
+        Timestamp order_leaveffactorydate = TimeUtils.getNowDate();
+        //注入当前时间
+        driOrderInfo.setOrder_leaveffactorydate(order_leaveffactorydate);
+//        注入操作员id
+        driOrderInfo.setOrder_fedituserid2(order_fedituserid2);
+        //修改状态
+        driOrderInfo.setOrder_state(3);
+//        注入毛重1
+        float mz = weightNow - driOrderInfo.getOrder_pz();
+        driOrderInfo.setOrder_mz(mz);
+//        司机订单修改
+        int i1 = mapper.editDriOrderInfo(driOrderInfo);
+        /*
+        修改工厂订单order_actualweight
+         */
+        int factory_orderid = driOrderInfo.getFactory_orderid();
+        FacOrderServer facOrderServer = new FacOrderServer();
+        FactoryOrder facOrderInfo = (FactoryOrder) facOrderServer.getFacOrderInfo(factory_orderid).get("facOrderInfo");
+        float order_actualweight = facOrderInfo.getOrder_actualweight();
+        facOrderInfo.setOrder_actualweight(order_actualweight + mz);
+        FacOrderMapper facOrderMapper = sqlsession.getMapper(FacOrderMapper.class);
+        int i = facOrderMapper.editFacOrder(facOrderInfo);
+
+        if (i==1 && i1==1){
+            sqlsession.commit();
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
 
     /**
      * 工厂方查看司机订单信息
@@ -360,9 +443,33 @@ public class DriverOrderServer {
         driOrderInfo.setOrder_ontime(TimeUtils.ifOntime(orderEnddate,order_startdate,order_transporttime));
         //修改状态
         driOrderInfo.setOrder_state(0);
-        //获得司机修改结果
+        //获得司机订单修改结果
         int i = mapper.editDriOrderInfo(driOrderInfo);
-        return new DriverOrderServer().editDriOrderInfo(driOrderInfo);
+        /*
+        修改工厂订单order_actualweight2，order_actualcarnum2
+         */
+        float order_actualweight = facOrderInfo.getOrder_actualweight2();
+        int order_actualcarnum2 = facOrderInfo.getOrder_actualcarnum2();
+        facOrderInfo.setOrder_actualweight2(order_actualweight + mz2);
+        facOrderInfo.setOrder_actualcarnum2(order_actualcarnum2+1);
+        FacOrderMapper facOrderMapper = sqlsession.getMapper(FacOrderMapper.class);
+        int i1 = facOrderMapper.editFacOrder(facOrderInfo);
+        /*
+        进行资金转移
+         */
+        int driver_id = driOrderInfo.getDriver_id();
+        new UserWalletServer().addWalletMoney(driver_id,1,facOrderInfo.getOrder_goodprice() * mz2,1);
+
+        //返回
+        if (i1 == 1 && i==1){
+            sqlsession.commit();
+            return 1;
+        }else {
+            return 0;
+        }
+
+
+
     }
 
 
