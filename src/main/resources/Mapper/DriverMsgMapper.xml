@@ -9,6 +9,11 @@
         select id from driver_msg
     </select>
 
+    <select id="getDriverMsg2" parameterType="String" resultType="com.example.coal.bean.DriverMsg">
+        select *
+        from driver_msg where d_phonenum = #{phoneNum};
+    </select>
+
     <select id="getDriverPwb" resultType="String">
         select d_password from driver_msg where id = #{d_id}
     </select>

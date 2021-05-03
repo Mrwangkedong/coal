@@ -170,6 +170,7 @@ public class FacMsgController {
         factoryStaff.setFactory_id(fac_id);
         factoryStaff.setStaff_phonenum(manage_phoneNum);
         factoryStaff.setStaff_password(manage_password);
+        factoryStaff.setStaff_class(1);
         int i1 = new FacStaffServer().addNewStaff(factoryStaff);
         if (i1==0){
             return 0;

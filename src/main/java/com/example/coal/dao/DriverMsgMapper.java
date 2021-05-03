@@ -28,13 +28,14 @@ public interface DriverMsgMapper {
 
 //    （一下整合成，修改司机个人信息）
     int editDriverMsg(DriverMsg dirverMsg);
-//    更改密码
-//    更改支付密码
-//    修改司机是否完成认证
-//    修改司机是否完成银行卡绑定
-//    修改司机的里程数
-//    修改司机的头像（地址）
-//    修改司机姓名
+
+    /**
+     * 通过手机号码获得用户信息
+     * @param phoneNum 手机号码
+     * @return 司机信息实体
+     */
+    DriverMsg getDriverMsg2(String phoneNum);
+
 
 
 }

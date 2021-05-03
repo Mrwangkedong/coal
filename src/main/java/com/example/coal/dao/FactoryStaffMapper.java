@@ -36,4 +36,11 @@ public interface FactoryStaffMapper {
      */
     int deleteStaffInfo(int staff_id);
 
+    /**
+     * 通过手机号获得员工密码
+     * @param phoneNum
+     * @return
+     */
+    FactoryStaff getStaffInfoByPhone(String phoneNum);
+
 }
