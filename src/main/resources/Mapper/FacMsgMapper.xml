@@ -17,7 +17,7 @@
     </select>
 
     <select id="getFacInfos" resultType="com.example.coal.bean.FactoryMsg">
-        select * from factory_msg;
+        select * from factory_msg where factory_ifpass = 1 or factory_ifpass = 3;
     </select>
 
     <update id="editFacMsg" parameterType="com.example.coal.bean.FactoryMsg">

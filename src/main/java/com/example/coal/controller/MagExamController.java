@@ -40,6 +40,26 @@ public class MagExamController {
         return magExamServer.passNewFacInfo(fac_id);
     }
 
+    @ResponseBody
+    @ApiOperation("拒绝新工厂申请")
+    @PostMapping("/refuseNewFacInfo")
+    int refuseNewFacInfo(int fac_id){
+        return magExamServer.refuseNewFacInfo(fac_id);
+    }
+
+    @ResponseBody
+    @ApiOperation("同意工厂信息修改申请")
+    @PostMapping("/passEditFacInfo")
+    int passEditFacInfo(int fac_id){
+        return magExamServer.passEditFacInfo(fac_id);
+    }
+
+    @ResponseBody
+    @ApiOperation("拒绝工厂信息修改申请")
+    @PostMapping("/refuseEditFacInfo")
+    int refuseEditFacInfo(int fac_id,String refuseReason){
+        return magExamServer.refuseEditFacInfo(fac_id,refuseReason);
+    }
 
 
 }

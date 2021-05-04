@@ -47,6 +47,13 @@ public class FacMsgController {
     }
 
     @ResponseBody
+    @ApiOperation("获得待审核工厂信息修改申请")
+    @PostMapping(path = "/getFacQuaByFacId")
+    FactoryQualified getFacQuaByFacId(int fac_id){
+        return facQuaServer.getFacQualifiedInfo(fac_id);
+    }
+
+    @ResponseBody
     @ApiOperation("更改工厂信息的非图片部分")
     @PostMapping(path = "/editFacMsgInfo")
     int editFacMsgInfo(@RequestParam int fac_id,@RequestParam String facName,@RequestParam String factory_address,@RequestParam String factory_lpname,
@@ -74,7 +81,7 @@ public class FacMsgController {
     @PostMapping(path = "/editFacLpcardPhoto1")
     Map<String,Object> editFacLpcardPhoto1(@RequestParam(value = "file") MultipartFile file ,HttpServletRequest request) throws IOException {
         int fac_id = Integer.parseInt(request.getParameter("fac_id"));
-        String pathStatic = "G:\\coal\\src\\main\\resources\\static";
+        String pathStatic = "G:\\coalstatic\\";
         // 图片存储目录及图片名称（存数据库的）
         String url_path = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto1" + File.separator + String.valueOf(fac_id)+".png";
         //图片保存路径
@@ -99,7 +106,7 @@ public class FacMsgController {
     @PostMapping(path = "/editFacLpcardPhoto2")
     Map<String,Object> editFacLpcardPhoto2(@RequestParam(value = "file") MultipartFile file ,HttpServletRequest request) throws IOException {
         int fac_id = Integer.parseInt(request.getParameter("fac_id"));
-        String pathStatic = "G:\\coal\\src\\main\\resources\\static";
+        String pathStatic = "G:\\coalstatic\\";
         // 图片存储目录及图片名称（存数据库的）
         String url_path = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto2" + File.separator + String.valueOf(fac_id)+".png";
         //图片保存路径
@@ -123,7 +130,7 @@ public class FacMsgController {
     @PostMapping(path = "/editFacLicencePhoto")
     Map<String,Object> editFacLicencePhoto(@RequestParam(value = "file") MultipartFile file ,HttpServletRequest request) throws IOException {
         int fac_id = Integer.parseInt(request.getParameter("fac_id"));
-        String pathStatic = "G:\\coal\\src\\main\\resources\\static";
+        String pathStatic = "G:\\coalstatic\\";
         // 图片存储目录及图片名称（存数据库的）
         String url_path = "qualified" + File.separator + "facImg" + File.separator + "licencePhoto" + File.separator + String.valueOf(fac_id)+".png";
         //图片保存路径
@@ -183,17 +190,17 @@ public class FacMsgController {
         /*
          * 返回得到的id，添加照片到指定路径
          */
-        String pathStatic = "G:\\coal\\src\\main\\resources\\static";
+        String pathStatic = "G:\\coalstatic\\";
         // 图片存储目录及图片名称（存数据库的）、图片保存路径(营业许可)
-        String url_path_licencePhoto = "qualified" + File.separator + "facImg" + File.separator + "licencePhoto" + File.separator + String.valueOf(fac_id)+".png";
+        String url_path_licencePhoto =  "facImg" + File.separator + "licencePhoto" + File.separator + String.valueOf(fac_id)+".png";
         String savePath_url_path_licencePhoto = pathStatic + File.separator + url_path_licencePhoto;
         facImg[0].transferTo(new File(savePath_url_path_licencePhoto));
         //        （身份证正面）
-        String url_path_lPcardPhoto1 = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto1" + File.separator + String.valueOf(fac_id)+".png";
+        String url_path_lPcardPhoto1 =  "facImg" + File.separator + "lPcardPhoto1" + File.separator + String.valueOf(fac_id)+".png";
         String savePath_url_path_lPcardPhoto1 = pathStatic + File.separator + url_path_lPcardPhoto1;
         facImg[1].transferTo(new File(savePath_url_path_lPcardPhoto1));
         //         （身份证反面）
-        String url_path_lPcardPhoto2 = "qualified" + File.separator + "facImg" + File.separator + "lPcardPhoto2" + File.separator + String.valueOf(fac_id)+".png";
+        String url_path_lPcardPhoto2 =  "facImg" + File.separator + "lPcardPhoto2" + File.separator + String.valueOf(fac_id)+".png";
         String savePath_url_path_lPcardPhoto2 = pathStatic + File.separator + url_path_lPcardPhoto2;
         facImg[2].transferTo(new File(savePath_url_path_lPcardPhoto2));
         FactoryMsg facInfo = facMsgServer.getFacInfo(fac_id);

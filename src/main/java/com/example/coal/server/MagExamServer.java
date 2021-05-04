@@ -31,6 +31,7 @@ public class MagExamServer {
         for (FactoryMsg factoryMsg : newFacInfo) {
             Map<String,Object> map = new HashMap<>();
             map.put("fac_id",factoryMsg.getId());
+            map.put("fac_name",factoryMsg.getName());
             map.put("fac_lpname",factoryMsg.getFactory_lpname());
             map.put("fac_address",factoryMsg.getFactory_address());
             newFacList.add(map);
@@ -66,7 +67,7 @@ public class MagExamServer {
         if (i == 0){
             return i;
         }
-        return new FacMsgServer().editFacIfPass(fac_id, 3);
+        return new FacMsgServer().editFacIfPass(fac_id, 0);
     }
 
 
@@ -82,6 +83,7 @@ public class MagExamServer {
         for (FactoryQualified factoryMsg : newFacInfo) {
             Map<String,Object> map = new HashMap<>();
             map.put("fac_id",factoryMsg.getFactory_id());
+            map.put("fac_name",factoryMsg.getName());
             map.put("fac_lpname",factoryMsg.getFactory_lpname());
             map.put("fac_address",factoryMsg.getFactory_address());
             newFacList.add(map);
