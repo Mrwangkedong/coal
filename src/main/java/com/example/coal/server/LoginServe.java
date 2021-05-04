@@ -1,6 +1,7 @@
 package com.example.coal.server;
 
 import com.example.coal.bean.DriverMsg;
+import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryStaff;
 import com.example.coal.dao.DriverMsgMapper;
 import com.example.coal.dao.FactoryStaffMapper;
@@ -24,9 +25,13 @@ public class LoginServe {
     * @return 1/0
     */
    public Map<String ,Object> FacLogin(String phoneNum,String password){
+      /*
+      获得工厂信息，如果if_pass为0/2则不通过
+       */
       Map<String ,Object> map = new HashMap<>();
       try{
          FactoryStaff factoryStaff = factoryStaffMapper.getStaffInfoByPhone(phoneNum);
+
          String staff_password = factoryStaff.getStaff_password();
          if (password.equals(staff_password)){
             map.put("code",1);
@@ -40,6 +45,7 @@ public class LoginServe {
          map.put("code",-1);
          System.out.println(e);
       }
+
       return map;
    }
 
@@ -54,6 +60,7 @@ public class LoginServe {
       try{
          DriverMsg driverMsg = driverMsgMapper.getDriverMsg2(phoneNum);
          String d_password = driverMsg.getD_password();
+
          if (password.equals(d_password)){
             map.put("code",1);
             map.put("d_id",driverMsg.getId());

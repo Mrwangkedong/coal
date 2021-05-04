@@ -29,13 +29,6 @@ public interface DriverMsgMapper {
 //    （一下整合成，修改司机个人信息）
     int editDriverMsg(DriverMsg dirverMsg);
 
-    /**
-     * 通过手机号码获得用户信息
-     * @param phoneNum 手机号码
-     * @return 司机信息实体
-     */
     DriverMsg getDriverMsg2(String phoneNum);
-
-
 
 }

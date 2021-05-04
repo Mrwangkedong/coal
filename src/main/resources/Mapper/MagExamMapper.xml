@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.coal.dao.MagExamMapper">
+    
+    <select id="getNewFacInfo" resultType="com.example.coal.bean.FactoryMsg">
+        select *
+        from factory_msg where factory_ifpass = 2;
+    </select>
+
+    <select id="getEditFacInfo" resultType="com.example.coal.bean.FactoryQualified">
+        select *
+        from factory_qualified
+        where factory_id in (select id from factory_msg where factory_ifpass = 3);
+    </select>
+    
+    <insert id="addEditFacQualified" parameterType="com.example.coal.bean.FactoryQualified">
+        insert into factory_qualified (factory_id,name, factory_address, factory_ifpass, factory_longitude, factory_latitude,
+                                       factory_lpname,factory_lpcardnum,factory_lpcardphoto1,factory_lpcardphoto2,factory_licencephoto)
+        values (#{factory_id},#{name}, #{factory_address}, #{factory_ifpass}, #{factory_longitude}, #{factory_latitude},
+                #{factory_lpname},#{factory_lpcardnum},#{factory_lpcardphoto1},#{factory_lpcardphoto2},#{factory_licencephoto});
+    </insert>
+
+    <select id="getEditFacQualifiedByFacId" resultType="com.example.coal.bean.FactoryQualified">
+        select *
+        from factory_qualified
+        where factory_id = #{factory_id}
+    </select>
+    
+</mapper>

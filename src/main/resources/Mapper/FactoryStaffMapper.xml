@@ -33,5 +33,9 @@
     <delete id="deleteStaffInfo" parameterType="int">
         delete from factory_staff where id = #{staff_id}
     </delete>
+
+    <delete id="deleteFacStaff" parameterType="int">
+        delete from factory_staff where factory_id = #{fac_id}
+    </delete>
     
 </mapper>

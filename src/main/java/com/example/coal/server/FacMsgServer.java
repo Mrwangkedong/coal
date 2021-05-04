@@ -114,4 +114,20 @@ public class FacMsgServer {
         return i;
     }
 
+    /**
+     * 修改工厂信息的通过状态
+     * @param fac_id
+     * @param if_pass
+     * @return
+     */
+    public int editFacIfPass(int fac_id,int if_pass){
+        FactoryMsg facInfo = getFacInfo(fac_id);
+        facInfo.setFactory_ifpass(if_pass);
+        int i = mapper.editFacMsg(facInfo);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
 }

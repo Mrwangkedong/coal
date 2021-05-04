@@ -51,14 +51,19 @@ public class FacMsgController {
     @PostMapping(path = "/editFacMsgInfo")
     int editFacMsgInfo(@RequestParam int fac_id,@RequestParam String facName,@RequestParam String factory_address,@RequestParam String factory_lpname,
         float factory_longitude,@RequestParam float factory_latitude,@RequestParam String factory_lpcardnum){
-//        1.根据fac_id获得信息实体
+//        1.根据fac_id获得信息实体(如果存在则返回，不存在新建返回）
         FactoryQualified factoryQualified = facQuaServer.exitFacQuaByFacId(fac_id);
+        if (factoryQualified == null){
+            System.out.println("修改工厂if_pass出错");
+            return 0;
+        }
         //2.赋予实体值
         factoryQualified.setName(facName);
         factoryQualified.setFactory_address(factory_address);
         factoryQualified.setFactory_lpname(factory_lpname);
         factoryQualified.setFactory_longitude(factory_longitude);
         factoryQualified.setFactory_latitude(factory_latitude);
+        factoryQualified.setFactory_lpcardnum(factory_lpcardnum);
         //3.返回更新信息1/0
         return facQuaServer.editFacQualified(factoryQualified);
     }
@@ -160,7 +165,7 @@ public class FacMsgController {
             return fac_id;
         }
         /*
-        添加工厂管理员员工！！！！！
+        添加工厂管理员员工！！！！！（通过的时候添加）
          */
         String manage_name = request.getParameter("manage_name");
         String manage_phoneNum = request.getParameter("manage_phoneNum");

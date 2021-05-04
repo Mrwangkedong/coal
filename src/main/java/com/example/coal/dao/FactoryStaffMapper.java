@@ -43,4 +43,11 @@ public interface FactoryStaffMapper {
      */
     FactoryStaff getStaffInfoByPhone(String phoneNum);
 
+    /**
+     * 删除工厂名下所有职员
+     * @param fac_id 工厂id
+     * @return 1/0
+     */
+    int deleteFacStaff(int fac_id);
+
 }

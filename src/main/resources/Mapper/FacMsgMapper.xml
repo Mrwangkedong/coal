@@ -22,7 +22,7 @@
 
     <update id="editFacMsg" parameterType="com.example.coal.bean.FactoryMsg">
         update factory_msg
-        set  name = #{name},factory_address = #{factory_address}, factory_longitude = #{factory_longitude},
+        set  name = #{name},factory_ifpass = #{factory_ifpass},factory_address = #{factory_address}, factory_longitude = #{factory_longitude},
              factory_latitude = #{factory_latitude}, factory_lpname = #{factory_lpname},
              factory_lpcardnum = #{factory_lpcardnum}, factory_lpcardphoto1 = #{factory_lpcardphoto1},
              factory_lpcardphoto2 = #{factory_lpcardphoto2},factory_licencephoto = #{factory_licencephoto}

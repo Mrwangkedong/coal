@@ -38,6 +38,20 @@ public class FacMessageServer {
         return i;
     }
 
+    public int addNewMessageFromMag(int to_id,String content){
+        FactoryMessage factoryMessage = new FactoryMessage();
+        factoryMessage.setTo_id(to_id);   //收到厂家id
+        factoryMessage.setContent(content);
+        Timestamp nowDate = TimeUtils.getNowDate();
+        factoryMessage.setMessageDate(nowDate); //当前时间
+        factoryMessage.setFrom_name("系统管理员");
+        int i = mapper.addNewMessage(factoryMessage);
+        if (i == 1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
     /**
      * 修改消息状态
      * @param messageId 消息id

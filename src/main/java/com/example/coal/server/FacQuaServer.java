@@ -1,5 +1,6 @@
 package com.example.coal.server;
 
+import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryQualified;
 import com.example.coal.dao.FacQualifiedMapper;
 
@@ -24,6 +25,11 @@ public class FacQuaServer {
      * @return
      */
     public FactoryQualified exitFacQuaByFacId(int fac_id){
+        FactoryMsg facInfo = new FacMsgServer().getFacInfo(fac_id);
+        facInfo.setFactory_ifpass(3);
+        int i = new FacMsgServer().editFacMsg(facInfo);
+        if (i==0)
+            return null;
         //先进行查看，当前用户是否在Qualified表中存在
         FactoryQualified facQualifiedInfo = getFacQualifiedInfo(fac_id);
         //如果不存在，就新建
@@ -57,7 +63,6 @@ public class FacQuaServer {
      * @return 1/0
      */
     public int editFacQualified(FactoryQualified factoryQualified){
-
         int i = mapper.editFacQualified(factoryQualified);
         if (i == 1){
             sqlsession.commit();

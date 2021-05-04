@@ -27,6 +27,7 @@
         <mapper resource="Mapper/FactoryStaffMapper.xml" />
         <mapper resource="Mapper/FacQualifiedMapper.xml" />
         <mapper resource="Mapper/FacMessageMapper.xml" />
+        <mapper resource="Mapper/MagExamMapper.xml" />
     </mappers>
 
 </configuration>

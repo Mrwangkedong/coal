@@ -522,11 +522,6 @@ public class FacOrderServer{
     }
 
 
-    public static void main(String[] args) {
-        String aStatic = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
-        System.out.println(aStatic);
-    }
-
 
 
 }

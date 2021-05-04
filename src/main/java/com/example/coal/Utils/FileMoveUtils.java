@@ -23,5 +23,25 @@ public class FileMoveUtils {
         }
     }
 
+    public static int facPhotoMove(int fac_id){
+        String lPcardPhoto1_before = "G:\\coal\\src\\main\\resources\\static\\qualified\\facImg\\lPcardPhoto1\\"+fac_id+".png";
+        String lPcardPhoto2_before = "G:\\coal\\src\\main\\resources\\static\\qualified\\facImg\\lPcardPhoto2\\"+fac_id+".png";
+        String licencePhoto_before = "G:\\coal\\src\\main\\resources\\static\\qualified\\facImg\\licencePhoto\\"+fac_id+".png";
+
+
+        String lPcardPhoto1_after = "G:\\coal\\src\\main\\resources\\static\\facImg\\lPcardPhoto1\\"+fac_id+".png";
+        String lPcardPhoto2_after = "G:\\coal\\src\\main\\resources\\static\\facImg\\lPcardPhoto2\\"+fac_id+".png";
+        String licencePhoto_after = "G:\\coal\\src\\main\\resources\\static\\facImg\\licencePhoto\\"+fac_id+".png";
+
+        try {
+            fileMove(lPcardPhoto1_before,lPcardPhoto1_after);
+            fileMove(lPcardPhoto2_before,lPcardPhoto2_after);
+            fileMove(licencePhoto_before,licencePhoto_after);
+            return 1;
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
 
 }
