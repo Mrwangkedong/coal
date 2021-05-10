@@ -2,6 +2,7 @@ package com.example.coal.controller;
 
 import com.example.coal.server.LoginServe;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,9 @@ import java.util.Map;
 @EnableSwagger2
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class LoginController {
-    LoginServe loginServe = new LoginServe();
+//    LoginServe loginServe = new LoginServe();
+    @Autowired
+    private LoginServe loginServe;
 
     @ResponseBody
     @ApiOperation("工厂员工登录")

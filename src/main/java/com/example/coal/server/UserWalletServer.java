@@ -176,7 +176,10 @@ public class UserWalletServer{
             }
             userWalletInfo.setWallet_money(moneyNow-moneyNum);
             int i = mapper.editWalletBcardInfo(userWalletInfo);  //当前用户修改状况
-            int i1 = addManageMoney(moneyNum);  //管理员钱包修改状况
+            int i1 = 1;
+            if (wallet_state != 3){
+                i1 = addManageMoney(moneyNum);  //管理员钱包修改状况
+            }
 
             /*
             增加账单
@@ -187,12 +190,11 @@ public class UserWalletServer{
                 userBill.setUser2_name("发起新订单");
             else userBill.setUser2_name("提现");
             userBill.setBill_money(moneyNum);
-            userBill.setBill_state(2);
+            userBill.setBill_state(wallet_state);
             userBill.setBill_type(0);
             userBill.setBill_data(TimeUtils.getNowDate());
             UserBillMapper userBillMapperapper = sqlsession.getMapper(UserBillMapper.class);
             int i2 = userBillMapperapper.addUserBill(userBill);
-
             if (i==1 && i1==1 && i2==1) {
                 sqlsession.commit();
                 return 1;

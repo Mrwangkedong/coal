@@ -6,17 +6,24 @@ import com.example.coal.bean.FactoryStaff;
 import com.example.coal.dao.DriverMsgMapper;
 import com.example.coal.dao.FactoryStaffMapper;
 import com.example.coal.dao.UserBillMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
-
+@Service
 public class LoginServe {
 
    FactoryStaffMapper factoryStaffMapper = sqlsession.getMapper(FactoryStaffMapper.class);
    DriverMsgMapper driverMsgMapper = sqlsession.getMapper(DriverMsgMapper.class);
+
+//
+//   private DriverMsgMapper driverMsgMapper;
+//   private FactoryStaffMapper factoryStaffMapper;
 
    /**
     *工厂管理员登录

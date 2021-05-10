@@ -131,6 +131,13 @@ public class FacOrderController {
     }
 
     @ResponseBody
+    @RequestMapping(path = "/orderAcceptOver",method = RequestMethod.POST)
+    @ApiOperation("工厂订单停止接单")
+    int orderAcceptOver(@RequestParam int fac_orderID){
+        return facOrderServer.orderAcceptOver(fac_orderID);
+    }
+
+    @ResponseBody
     @RequestMapping(path = "/getFacOrderSonOrder",method = RequestMethod.POST)
     @ApiOperation("获得一个公司订单下的所有子订单")
     List<Map<String ,Object>> getFacOrderSonOrder(int fac_orderId) throws JSONException{

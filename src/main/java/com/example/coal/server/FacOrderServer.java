@@ -357,6 +357,23 @@ public class FacOrderServer{
         return i;
     }
 
+    /**
+     * 工厂订单停止接单
+     * @param fac_orderID 工厂订单id
+     * @return 1/0
+     */
+    public int orderAcceptOver(int fac_orderID){
+        //通过工厂订单id获得工厂订单的具体信息
+        FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
+        facOrderInfo.setOrder_state(3);
+        int i = mapper.editFacOrder(facOrderInfo);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
+
     /***
      * 获得工厂订单全部信息【包括子订单】
      * @param fac_orderID 工厂订单id

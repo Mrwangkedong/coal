@@ -1,6 +1,7 @@
 package com.example.coal.dao;
 
 import com.example.coal.bean.FactoryStaff;
+import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 

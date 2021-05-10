@@ -216,11 +216,12 @@ public class DriverOrderServer {
 
         //得到工厂订单信息
         FactoryOrder facOrderInfo = facOrderMapper.getFacOrderInfo(factory_orderid);
+        int facOrder_state = facOrderInfo.getOrder_state();
         //获得工厂订单现在实际车辆数 and 目标车辆数
         int order_actualcarnum = facOrderInfo.getOrder_actualcarnum();
         int order_targetcarnum = facOrderInfo.getOrder_targetcarnum();
         //如果实际车辆数错误，返回2
-        if (order_actualcarnum >= order_targetcarnum){
+        if (order_actualcarnum >= order_targetcarnum || facOrder_state !=1){
             return 2;       //返回2，说明实际数量已经够了
         }else {
             //更改实际车辆数
