@@ -57,7 +57,13 @@ public class DriverMsgServer {
     }
 
 
-
+    /**
+     * 获得所有的司机用户信息
+     * @return List
+     */
+    public List<DriverMsg> getAllDriMsg(){
+        return mapper.getDriMsgs();
+    }
 
 
 

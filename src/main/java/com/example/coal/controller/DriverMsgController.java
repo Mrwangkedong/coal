@@ -11,6 +11,7 @@ import com.example.coal.server.DriverMsgServer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -68,6 +69,15 @@ public class DriverMsgController{
         return driverMsgServer.editDriverMsg(driverMsg);
     }
 
+    @ResponseBody
+    @ApiOperation("更改司机的手机号")
+    @RequestMapping(path = "/editDriverPhoneNum",method = RequestMethod.POST)
+    public int editDriverPhoneNum(@ApiParam("司机d_id")@RequestParam int d_id,@ApiParam("司机新密码")@RequestParam String newPhoneNum){
+        DriverMsg driverMsg = driverMsgServer.getDriverMsg(d_id);
+        driverMsg.setD_phonenum(newPhoneNum);
+        return driverMsgServer.editDriverMsg(driverMsg);
+    }
+
 
     @ResponseBody
     @ApiOperation("更改司机的银行卡绑定情况")
@@ -100,7 +110,12 @@ public class DriverMsgController{
         return driverMsgServer.addNewDriver(map);
     }
 
-
+    @ResponseBody
+    @ApiOperation("获得所有司机信息")
+    @RequestMapping(path = "/getAllDriMsg",method = RequestMethod.GET)
+    public List<DriverMsg> getAllDriMsg(){
+        return driverMsgServer.getAllDriMsg();
+    }
 
 
 }

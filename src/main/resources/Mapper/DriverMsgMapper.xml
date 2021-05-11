@@ -31,9 +31,13 @@
     </insert>
 
     <update id="editDriverMsg" parameterType="com.example.coal.bean.DriverMsg">
-        update driver_msg set d_password = #{d_password},d_ifbcard = #{d_ifbcard},d_ifqualified = #{d_ifqualified},d_distance = #{d_distance},d_txaddress = #{d_txaddress},d_pay_password = #{d_pay_password},d_cid = #{d_cid} where id=#{id}
+        update driver_msg set d_phonenum = #{d_phonenum},d_password = #{d_password},d_ifbcard = #{d_ifbcard},d_ifqualified = #{d_ifqualified},d_distance = #{d_distance},d_txaddress = #{d_txaddress},d_pay_password = #{d_pay_password},d_cid = #{d_cid} where id=#{id}
     </update>
 
+    <select id="getDriMsgs" resultType="com.example.coal.bean.DriverMsg">
+        select *
+        from driver_msg;
+    </select>
 
 
 
