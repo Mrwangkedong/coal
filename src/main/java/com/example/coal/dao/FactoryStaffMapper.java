@@ -14,6 +14,11 @@ public interface FactoryStaffMapper {
      */
     List<FactoryStaff> getAllStall(int fac_id);
 
+    /**
+     * 添加新的工厂员工
+     * @param factoryStaff 实体
+     * @return 1/0
+     */
     int addNewStaff(FactoryStaff factoryStaff);
 
     /***
@@ -51,4 +56,9 @@ public interface FactoryStaffMapper {
      */
     int deleteFacStaff(int fac_id);
 
+    /**
+     * 获得全部工厂员工
+     * @return
+     */
+    List<FactoryStaff> getAllStaff();
 }

@@ -19,6 +19,11 @@
         select * from factory_staff where id = #{staff_id}
     </select>
 
+    <select id="getAllStaff" resultType="com.example.coal.bean.FactoryStaff">
+        select *
+        from factory_staff;
+    </select>
+
     <select id="getStaffInfoByPhone" resultType="com.example.coal.bean.FactoryStaff" parameterType="String">
         select * from factory_staff where staff_phonenum = #{phoneNum}
     </select>

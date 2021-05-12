@@ -5,10 +5,7 @@ import com.example.coal.bean.FactoryStaff;
 import com.example.coal.server.FacStaffServer;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.text.ParseException;
@@ -27,6 +24,13 @@ public class FacStaffController {
     @ApiOperation("获得某个工厂下的全部员工信息")
     List<FactoryStaff> getAllStaff(@RequestParam int fac_id){
         return facStaffServer.getAllStaff(fac_id);
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/getAllStaffs")
+    @ApiOperation("获得所有工厂全部员工信息")
+    public List<FactoryStaff> getAllStaffs(){
+        return facStaffServer.getAllStaffs();
     }
 
     @ResponseBody

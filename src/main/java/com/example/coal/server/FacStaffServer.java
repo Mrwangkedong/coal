@@ -22,6 +22,14 @@ public class FacStaffServer {
     }
 
     /***
+     * 获得工厂全部的员工信息
+     * @return List
+     */
+    public List<FactoryStaff> getAllStaffs(){
+        return mapper.getAllStaff();
+    }
+
+    /***
      * 添加新的员工信息
      * @param factoryStaff
      * @return
