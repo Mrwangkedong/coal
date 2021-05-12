@@ -58,4 +58,9 @@ public interface FacMsgMapper {
      */
     int editFacMsg(FactoryMsg factoryMsg);
 
+    /**
+     * 获得全部工厂信息
+     * @return List
+     */
+    List<FactoryMsg> getAllFac();
 }

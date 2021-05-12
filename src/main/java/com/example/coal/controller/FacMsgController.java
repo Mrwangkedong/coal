@@ -40,6 +40,13 @@ public class FacMsgController {
     }
 
     @ResponseBody
+    @ApiOperation("获得全部工厂信息")
+    @GetMapping(path = "/getAllFac")
+    public List<FactoryMsg> getAllFac(){
+        return facMsgServer.getAllFac();
+    }
+
+    @ResponseBody
     @ApiOperation("获得工厂的全部信息")
     @PostMapping(path = "/getFacMsg")
     FactoryMsg getFacMsg(@RequestParam @ApiParam("工厂id") int fac_id){

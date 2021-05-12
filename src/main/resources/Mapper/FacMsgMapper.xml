@@ -40,5 +40,10 @@
         select *
         from factory_msg where factory_lpname = #{lpName} and name = #{facName};
     </select>
+    
+    <select id="getAllFac" resultType="com.example.coal.bean.FactoryMsg">
+        select *
+        from factory_msg;
+    </select>
 
 </mapper>

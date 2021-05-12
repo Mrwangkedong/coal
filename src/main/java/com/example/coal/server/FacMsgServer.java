@@ -101,6 +101,14 @@ public class FacMsgServer {
         return names;
     }
 
+    /**
+     * 获得全部工厂信息
+     * @return List
+     */
+    public List<FactoryMsg> getAllFac(){
+        return mapper.getAllFac();
+    }
+
     /***
      * 更改工厂信息
      * @param factoryMsg 工厂信息实体
