@@ -57,22 +57,16 @@ public class DriverOrderController {
 
 //    添加新的订单
     @ResponseBody
-    @RequestMapping(path = "/addDriOrderInf",method = RequestMethod.POST)
+    @RequestMapping(path = "/addDriOrderInfo",method = RequestMethod.POST)
     @ApiOperation("添加新的订单")
-    public int addDriOrderInf(@ApiParam("输入一个司机id")@RequestParam int driver_id,
-                              @ApiParam("输入一个工厂订单id")@RequestParam int factory_orderid,
-                              @ApiParam("输入保证金")@RequestParam float order_ensuremoney,
-                              @ApiParam("输入当前经度")@RequestParam float order_longitude,
-                              @ApiParam("输入当前纬度")@RequestParam float order_latitude){
+    public int addDriOrderInfo(@ApiParam("输入一个司机id")@RequestParam int driver_id,
+                              @ApiParam("输入一个工厂订单id")@RequestParam int factory_orderid){
         Map<String ,Object> map = new HashMap<>();
         map.put("driver_id",driver_id);
         map.put("factory_orderid",factory_orderid);
-        map.put("order_ensuremoney",order_ensuremoney);
         java.util.Date date = new java.util.Date();          // 获取一个Date对象
         Timestamp order_startdate = new Timestamp(date.getTime());     //   讲日期时间转换为数据库中的timestamp类型
         map.put("order_startdate",order_startdate);
-        map.put("order_longitude",order_longitude);
-        map.put("order_latitude",order_latitude);
         return driverOrderServer.addDriOrderInfo(map);
     }
 
@@ -118,7 +112,6 @@ public class DriverOrderController {
     public int editDriOrderEndInfo(@RequestParam int order_id,
                                    @RequestParam int order_tedituserid,@RequestParam float weightNow,
                                    @RequestParam int order_star){
-
         //修改司机订单信息
     return driverOrderServer.editDriOrderEndInfo(order_id,order_tedituserid,weightNow,order_star);
     }
@@ -130,6 +123,19 @@ public class DriverOrderController {
         return driverOrderServer.getDriOrderAll(dri_orderId);
     }
 
+    @ResponseBody
+    @RequestMapping(path = "/editJinWei",method = RequestMethod.POST)
+    @ApiOperation("更改经纬度")
+    public int editJinWei(int d_id , float order_longitude,float order_latitude){
+        DriverOrder orderNow = driverOrderServer.getOrderNow(d_id);
+        if (orderNow == null){
+            return -1;
+        }else {
+            orderNow.setOrder_longitude(order_longitude);
+            orderNow.setOrder_latitude(order_latitude);
+            return driverOrderServer.editDriOrderInfo(orderNow);
+        }
+    }
 
 
 

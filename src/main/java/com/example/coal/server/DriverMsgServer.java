@@ -39,15 +39,6 @@ public class DriverMsgServer {
         return mapper.getDriverMsg(d_id);
     }
 
-//    添加新的司机信息
-    public int addNewDriver(Map<String ,Object> map){
-
-        int i = mapper.addNewDriver(map);
-        if (i==1){
-            sqlsession.commit();
-        }
-        return i;
-    }
 
 //    更改司机信息
     public int editDriverMsg(DriverMsg driverMsg){

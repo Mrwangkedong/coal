@@ -192,6 +192,14 @@ public class DriverOrderServer {
         //从map中获得信息
         Integer driver_id = (Integer) map.get("driver_id");
         int factory_orderid = (Integer) map.get("factory_orderid");
+        //工厂订单mapper
+        FacOrderMapper facOrderMapper = sqlsession.getMapper(FacOrderMapper.class);
+        //得到工厂订单信息
+        FactoryOrder facOrderInfo = facOrderMapper.getFacOrderInfo(factory_orderid);
+        int order_carclass = facOrderInfo.getOrder_carclass();
+
+
+
         float ensure_money = (float) map.get("order_ensuremoney");
 
         //判断司机当前是否已经有了订单
@@ -200,22 +208,20 @@ public class DriverOrderServer {
             return 4;  //返回4，表示当前已经存在订单
         }
 
-        //工厂订单mapper
-        FacOrderMapper facOrderMapper = sqlsession.getMapper(FacOrderMapper.class);
+
         //账单Mapper
         UserBillMapper userBillMapper = sqlsession.getMapper(UserBillMapper.class);
         //钱包Mapper
         UserWalletMapper userWalletMapper = sqlsession.getMapper(UserWalletMapper.class);
         UserWallet walletInfo = userWalletMapper.getWalletInfo(driver_id, 1);
         if (walletInfo == null){
-            return 5;
+            return 5;  //未绑定银行卡
         }
         if (walletInfo.getWallet_money() < ensure_money){
             return 3;   //返回3，说明余额不足
         }
 
-        //得到工厂订单信息
-        FactoryOrder facOrderInfo = facOrderMapper.getFacOrderInfo(factory_orderid);
+
         int facOrder_state = facOrderInfo.getOrder_state();
         //获得工厂订单现在实际车辆数 and 目标车辆数
         int order_actualcarnum = facOrderInfo.getOrder_actualcarnum();

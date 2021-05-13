@@ -11,7 +11,7 @@
 
     <select id="getDriverMsg2" parameterType="String" resultType="com.example.coal.bean.DriverMsg">
         select *
-        from driver_msg where d_phonenum = #{phoneNum};
+        from driver_msg where d_phonenum = #{phoneNum} and d_ifqualified != 0;
     </select>
 
     <select id="getDriverPwb" resultType="String">
@@ -27,11 +27,24 @@
     </select>
 
     <insert id="addNewDriver" parameterType="map">
-        insert into driver_msg (d_password,d_name,d_phonenum,d_sex) value (#{d_password},#{d_name},#{d_phonenum},#{d_sex})
+        insert into driver_msg (d_password,d_name,d_phonenum,d_sex,pcard_number,d_pay_password,
+                                d_birthdate,dcard_carclass,dcard_validfrom,dcard_validfor,
+                                dcard_carnumber,d_ifqualified,d_ifbcard)
+        value (#{d_password},#{d_name},#{d_phonenum},#{d_sex},#{pcard_number},#{d_pay_password},
+            #{d_birthdate},#{dcard_carclass},#{dcard_validfrom},#{dcard_validfor},
+            #{dcard_carnumber},2,0)
     </insert>
 
     <update id="editDriverMsg" parameterType="com.example.coal.bean.DriverMsg">
-        update driver_msg set d_phonenum = #{d_phonenum},d_password = #{d_password},d_ifbcard = #{d_ifbcard},d_ifqualified = #{d_ifqualified},d_distance = #{d_distance},d_txaddress = #{d_txaddress},d_pay_password = #{d_pay_password},d_cid = #{d_cid} where id=#{id}
+        update driver_msg set
+            d_phonenum = #{d_phonenum},d_password = #{d_password},d_ifbcard = #{d_ifbcard},
+            d_ifqualified = #{d_ifqualified},d_distance = #{d_distance},
+            d_pay_password = #{d_pay_password},d_cid = #{d_cid},
+            d_birthdate = #{d_birthdate},pcard_number = #{pcard_number},dcard_carclass = #{dcard_carclass},
+            dcard_validfrom = #{dcard_validfrom},dcard_validfor = #{dcard_validfor}
+            pcard_photoaddress1 = #{pcard_photoaddress1},pcard_photoaddress2 = #{pcard_photoaddress2},
+            dcard_photo = #{dcard_photo},dcard_carphoto = #{dcard_carphoto}
+        where id=#{id}
     </update>
 
     <select id="getDriMsgs" resultType="com.example.coal.bean.DriverMsg">
@@ -39,6 +52,9 @@
         from driver_msg;
     </select>
 
+    <select id="getDriverQualified" resultType="com.example.coal.bean.FactoryQualified">
+        select * from
+    </select>
 
 
 </mapper>

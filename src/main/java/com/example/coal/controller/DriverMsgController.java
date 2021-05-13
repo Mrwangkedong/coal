@@ -63,7 +63,7 @@ public class DriverMsgController{
     @ResponseBody
     @ApiOperation("更改司机的支付密码")
     @RequestMapping(path = "/editDriverPayPwb",method = RequestMethod.POST)
-    public int editDriverPayPwb(@ApiParam("司机d_id")@RequestParam int d_id,@ApiParam("司机新密码")@RequestParam String newPayPwb){
+    public int editDriverPayPwb(@ApiParam("司机d_id")@RequestParam int d_id,@ApiParam("司机新支付密码")@RequestParam String newPayPwb){
         DriverMsg driverMsg = driverMsgServer.getDriverMsg(d_id);
         driverMsg.setD_pay_password(newPayPwb);
         return driverMsgServer.editDriverMsg(driverMsg);
@@ -99,23 +99,18 @@ public class DriverMsgController{
     }
 
     @ResponseBody
-    @ApiOperation("添加新的司机成员")
-    @RequestMapping(path = "/addNewDriver",method = RequestMethod.POST)
-    public int addNewDriver(@RequestParam String d_phonenum,@RequestParam String d_password,@RequestParam String d_name,@RequestParam String d_sex){
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("d_phonenum",d_phonenum);
-        map.put("d_password",d_password);
-        map.put("d_name",d_name);
-        map.put("d_sex",d_sex);
-        return driverMsgServer.addNewDriver(map);
-    }
-
-    @ResponseBody
     @ApiOperation("获得所有司机信息")
     @RequestMapping(path = "/getAllDriMsg",method = RequestMethod.GET)
     public List<DriverMsg> getAllDriMsg(){
         return driverMsgServer.getAllDriMsg();
     }
 
+    @ResponseBody
+    @ApiOperation("添加新司机")
+    @RequestMapping(path = "/addNewDriver",method = RequestMethod.POST)
+    public int addNewDriver(DriverMsg driverMsg){
+        System.out.println(driverMsg);
+        return 1;
+    }
 
 }
