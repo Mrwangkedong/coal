@@ -68,6 +68,10 @@ public class LoginServe {
          DriverMsg driverMsg = driverMsgMapper.getDriverMsg2(phoneNum);
          String d_password = driverMsg.getD_password();
 
+         if (driverMsg.getD_ifqualified() == 2){
+            map.put("code",2);   //正在申请
+         }
+
          if (password.equals(d_password)){
             map.put("code",1);
             map.put("d_id",driverMsg.getId());

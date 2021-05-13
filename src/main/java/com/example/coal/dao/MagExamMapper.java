@@ -1,5 +1,6 @@
 package com.example.coal.dao;
 
+import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryQualified;
 
@@ -34,5 +35,15 @@ public interface MagExamMapper {
     FactoryQualified getEditFacQualifiedByFacId(int factory_id);
 
 
+    /**
+     * 获得全部待审核新司机申请
+     * @return List
+     */
+    List<DriverMsg> getNewDriverList();
 
+    /**
+     * 获得全部待审批司机信息更改
+     * @return List
+     */
+    List<DriverMsg> getEdirDriverList();
 }

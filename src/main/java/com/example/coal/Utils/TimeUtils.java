@@ -30,4 +30,15 @@ public class TimeUtils {
         else return 0;
     }
 
+    /**
+     * 转化字符串日期为Date
+     * @param stringDate 字符串日期
+     * @return Date
+     * @throws ParseException 11
+     */
+    public static Date dateTransform(String stringDate) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟
+        return sdf.parse(stringDate);
+    }
+
 }

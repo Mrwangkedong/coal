@@ -1,8 +1,11 @@
 package com.example.coal.controller;
 
+import com.example.coal.bean.DriverMsg;
 import com.example.coal.server.MagExamServer;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +20,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class MagExamController {
 
-    MagExamServer magExamServer = new MagExamServer();
+    @Autowired
+     private MagExamServer magExamServer ;
 
     @ResponseBody
     @ApiOperation("获得全部待申请工厂信息列表")
@@ -61,5 +65,12 @@ public class MagExamController {
         return magExamServer.refuseEditFacInfo(fac_id,refuseReason);
     }
 
+//    ***********司机审批操作******************************************************************************************************
+    @ResponseBody
+    @ApiOperation("获得全部新司机申请")
+    @GetMapping("/getNewDriverList")
+    public List<DriverMsg> getNewDriverList(){
+        return magExamServer.getNewDriverList();
+    }
 
 }

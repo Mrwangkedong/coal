@@ -1,5 +1,6 @@
 package com.example.coal.server;
 
+import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryQualified;
 import com.example.coal.dao.DriverMsgMapper;
@@ -8,6 +9,8 @@ import com.example.coal.dao.FactoryStaffMapper;
 import com.example.coal.dao.MagExamMapper;
 
 import com.example.coal.Utils.FileMoveUtils;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.Map;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class MagExamServer {
     MagExamMapper magExamMapper = sqlsession.getMapper(MagExamMapper.class);
     FacMsgMapper facMsgMapper = sqlsession.getMapper(FacMsgMapper.class);
@@ -146,5 +150,21 @@ public class MagExamServer {
         return i1;
     }
 
+//    ***********司机审批操作******************************************************************************************************
+
+    /**
+     * 获得全部新司机申请
+     * @return List
+     */
+    public List<DriverMsg> getNewDriverList(){
+        return magExamMapper.getNewDriverList();
+    }
+    /**
+     * 获得全部新司机申请
+     * @return List
+     */
+    public List<DriverMsg> getEdirDriverList(){
+        return magExamMapper.getEdirDriverList();
+    }
 
 }

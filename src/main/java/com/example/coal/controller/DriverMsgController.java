@@ -1,6 +1,7 @@
 package com.example.coal.controller;
 
 
+import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.UserWallet;
 import io.swagger.annotations.ApiOperation;
@@ -8,8 +9,13 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.coal.server.DriverMsgServer;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,9 +114,18 @@ public class DriverMsgController{
     @ResponseBody
     @ApiOperation("添加新司机")
     @RequestMapping(path = "/addNewDriver",method = RequestMethod.POST)
-    public int addNewDriver(DriverMsg driverMsg){
-        System.out.println(driverMsg);
-        return 1;
+    public Map<String,Object> addNewDriver(MultipartFile[] driverImg, HttpServletRequest request,DriverMsg driverMsg) throws ParseException, IOException {
+        //接收字符串日期，然后进行转换
+        String birthdate = request.getParameter("birthdate");
+        String dcard_startDate = request.getParameter("dcard_startDate");
+        Date d_birthdate = TimeUtils.dateTransform(birthdate);
+        Date dcard_validfrom = TimeUtils.dateTransform(dcard_startDate);
+        //将日期进行注入
+        driverMsg.setD_birthdate(d_birthdate);
+        driverMsg.setDcard_validfrom(dcard_validfrom);
+
+        return driverMsgServer.addNewDriver(driverImg,driverMsg);
+
     }
 
 }

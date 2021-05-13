@@ -26,5 +26,14 @@
         from factory_qualified
         where factory_id = #{factory_id}
     </select>
-    
+
+    <select id="getNewDriverList" resultType="com.example.coal.bean.DriverMsg">
+        select * from driver_msg where d_ifqualified = 2
+    </select>
+
+    <select id="getEdirDriverList" resultType="com.example.coal.bean.DriverQualified">
+        select *
+        from driver_qualified
+        where driver_id in (select id from driver_msg where d_ifqualified = 3);
+    </select>
 </mapper>
