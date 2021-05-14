@@ -73,4 +73,17 @@ public class MagExamController {
         return magExamServer.getNewDriverList();
     }
 
+    @ResponseBody
+    @ApiOperation("通过新司机申请")
+    @PostMapping("/passNewDriver")
+    public int passNewDriver(int d_id){
+        return magExamServer.passNewDriver(d_id);
+    }
+
+    @ResponseBody
+    @ApiOperation("拒绝新司机申请")
+    @PostMapping("/refuseNewDriver")
+    int refuseNewDriver(int d_id,String refuseReason){
+        return magExamServer.refuseNewDriver(d_id,refuseReason);
+    }
 }

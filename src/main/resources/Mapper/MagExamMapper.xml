@@ -31,9 +31,10 @@
         select * from driver_msg where d_ifqualified = 2
     </select>
 
-    <select id="getEdirDriverList" resultType="com.example.coal.bean.DriverQualified">
-        select *
-        from driver_qualified
-        where driver_id in (select id from driver_msg where d_ifqualified = 3);
-    </select>
+<!--    <select id="getEdirDriverList" resultType="com.example.coal.bean.DriverQualified">-->
+<!--        select *-->
+<!--        from driver_qualified-->
+<!--        where driver_id in (select id from driver_msg where d_ifqualified = 3);-->
+<!--    </select>-->
+<!--    -->
 </mapper>

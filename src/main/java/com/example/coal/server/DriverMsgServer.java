@@ -39,7 +39,6 @@ public class DriverMsgServer {
 
 //    根据司机id获得司机的全部信息
     public DriverMsg getDriverMsg(int d_id){
-
         return mapper.getDriverMsg(d_id);
     }
 

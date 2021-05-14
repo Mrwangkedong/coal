@@ -23,6 +23,8 @@ public class MagExamServer {
     MagExamMapper magExamMapper = sqlsession.getMapper(MagExamMapper.class);
     FacMsgMapper facMsgMapper = sqlsession.getMapper(FacMsgMapper.class);
     FactoryStaffMapper factoryStaffMapper = sqlsession.getMapper(FactoryStaffMapper.class);
+
+    DriverMsgMapper driverMsgMapper = sqlsession.getMapper(DriverMsgMapper.class);
     /**
      * 获得所有新申请订单的列表
      * @return List
@@ -160,11 +162,47 @@ public class MagExamServer {
         return magExamMapper.getNewDriverList();
     }
     /**
-     * 获得全部新司机申请
+     * 获得全部司机修改申请
      * @return List
      */
     public List<DriverMsg> getEdirDriverList(){
         return magExamMapper.getEdirDriverList();
     }
 
+    /**
+     * 通过信息机的申请
+     * @param d_id 司机id
+     * @return 1/0    -1:已操作过
+     */
+    public int passNewDriver(int d_id){
+        DriverMsg driverMsg = driverMsgMapper.getDriverMsg(d_id);
+        if (driverMsg.getD_ifqualified() != 2){
+            return -1;
+        }
+        driverMsg.setD_ifqualified(1);
+        int i = driverMsgMapper.editDriverMsg(driverMsg);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
+
+    /**
+     * 拒绝申请
+     * @param d_id 司机id
+     * @param refuseReason 拒绝原因
+     * @return 1/0        -1:已操作过
+     */
+    public int refuseNewDriver(int d_id,String refuseReason){
+        DriverMsg driverMsg = driverMsgMapper.getDriverMsg(d_id);
+        if (driverMsg.getD_ifqualified() != 2){
+            return -1;
+        }
+        driverMsg.setD_ifqualified(0);
+        int i = driverMsgMapper.editDriverMsg(driverMsg);
+        if (i==1){
+            sqlsession.commit();
+        }
+        return i;
+    }
 }
