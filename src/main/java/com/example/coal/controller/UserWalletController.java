@@ -3,6 +3,7 @@ package com.example.coal.controller;
 import com.example.coal.server.UserWalletServer;
 import com.example.coal.bean.UserWallet;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -15,7 +16,8 @@ import java.util.Map;
 @ApiOperation("用户账钱包信息")
 public class UserWalletController {
 
-    UserWalletServer userWalletServer = new UserWalletServer();
+    @Autowired
+    private UserWalletServer userWalletServer;
 
     @ResponseBody
     @ApiOperation("获取当前用户的wallet信息")

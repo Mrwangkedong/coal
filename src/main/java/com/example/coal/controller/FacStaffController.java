@@ -4,6 +4,7 @@ package com.example.coal.controller;
 import com.example.coal.bean.FactoryStaff;
 import com.example.coal.server.FacStaffServer;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -17,7 +18,8 @@ import java.util.List;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class FacStaffController {
 
-    FacStaffServer facStaffServer = new FacStaffServer();
+    @Autowired
+    private FacStaffServer facStaffServer;
 
     @ResponseBody
     @PostMapping(path = "/getAllStaff")

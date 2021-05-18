@@ -6,6 +6,7 @@ import com.example.coal.bean.FactoryStaff;
 import com.example.coal.server.FacMsgServer;
 import com.example.coal.server.FacQuaServer;
 import com.example.coal.server.FacStaffServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,8 +30,10 @@ import java.util.Map;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class FacMsgController {
 
-    FacMsgServer facMsgServer = new FacMsgServer();
-    FacQuaServer facQuaServer = new FacQuaServer();
+    @Autowired
+    FacMsgServer facMsgServer ;
+    @Autowired
+    FacQuaServer facQuaServer;
 
     @ResponseBody
     @ApiOperation("获得所有工厂名称")

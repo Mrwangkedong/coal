@@ -49,7 +49,7 @@
 
     <select id="getDriMsgs" resultType="com.example.coal.bean.DriverMsg">
         select *
-        from driver_msg;
+        from driver_msg where d_ifqualified = 1 or d_ifqualified = 3;
     </select>
 
 

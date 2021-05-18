@@ -9,13 +9,17 @@ import com.example.coal.dao.DriverMsgMapper;
 import com.example.coal.dao.UserBillMapper;
 import com.example.coal.dao.UserWalletMapper;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class UserWalletServer{
+
 
     UserWalletMapper mapper = sqlsession.getMapper(UserWalletMapper.class);
 

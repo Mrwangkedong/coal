@@ -6,6 +6,7 @@ import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.UserWallet;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.coal.server.DriverMsgServer;
@@ -25,7 +26,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class DriverMsgController{
 
-    DriverMsgServer driverMsgServer = new DriverMsgServer();
+    @Autowired
+    private DriverMsgServer driverMsgServer;
 
     @ResponseBody
     @ApiOperation("查看id是否存在")

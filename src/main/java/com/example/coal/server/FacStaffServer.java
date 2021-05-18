@@ -2,6 +2,7 @@ package com.example.coal.server;
 import com.example.coal.bean.FactoryStaff;
 import com.example.coal.dao.FacOrderMapper;
 import com.example.coal.dao.FactoryStaffMapper;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class FacStaffServer {
     FactoryStaffMapper mapper = sqlsession.getMapper(FactoryStaffMapper.class);
 

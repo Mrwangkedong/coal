@@ -18,6 +18,7 @@ import static com.example.coal.server.DriverMsgServer.sqlsession;
 @Service
 public class LoginServe {
 
+
    FactoryStaffMapper factoryStaffMapper = sqlsession.getMapper(FactoryStaffMapper.class);
    DriverMsgMapper driverMsgMapper = sqlsession.getMapper(DriverMsgMapper.class);
 
@@ -50,7 +51,7 @@ public class LoginServe {
          }
       }catch (Exception e){
          map.put("code",-1);
-         System.out.println(e);
+         e.printStackTrace();
       }
 
       return map;

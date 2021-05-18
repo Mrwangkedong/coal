@@ -4,6 +4,7 @@ import com.example.coal.Utils.MybatisUtils;
 import com.example.coal.bean.DriverMsg;
 import com.example.coal.dao.DriverMsgMapper;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -12,10 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class DriverMsgServer {
     //        获得sqlsession对象
     public static  SqlSession sqlsession = MybatisUtils.getSqlsession();
-    private DriverMsgMapper mapper = sqlsession.getMapper(DriverMsgMapper.class);
+    DriverMsgMapper mapper = sqlsession.getMapper(DriverMsgMapper.class);
 
 //  判断某个司机id是否存在
     public boolean ifExitDriId(int d_id){

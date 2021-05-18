@@ -2,11 +2,15 @@ package com.example.coal.server;
 
 import com.example.coal.bean.UserBill;
 import com.example.coal.dao.UserBillMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class UserBillServer {
+
 
     UserBillMapper mapper = sqlsession.getMapper(UserBillMapper.class);
 

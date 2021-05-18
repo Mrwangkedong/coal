@@ -5,13 +5,16 @@ import com.example.coal.bean.FactoryMessage;
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.dao.FacMessageMapper;
 import com.example.coal.dao.FacMsgMapper;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class FacMessageServer {
+
     FacMessageMapper mapper = sqlsession.getMapper(FacMessageMapper.class);
 
     /**

@@ -4,10 +4,8 @@ package com.example.coal.server;
 import com.example.coal.Utils.DistanceUtil;
 import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.*;
-import com.example.coal.dao.DriverOrderMapper;
-import com.example.coal.dao.FacOrderMapper;
-import com.example.coal.dao.UserBillMapper;
-import com.example.coal.dao.UserWalletMapper;
+import com.example.coal.dao.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Timestamp;
@@ -15,7 +13,9 @@ import java.util.*;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class DriverOrderServer {
+
 
     DriverOrderMapper mapper = sqlsession.getMapper(DriverOrderMapper.class);
 
@@ -44,7 +44,7 @@ public class DriverOrderServer {
         float ft_factory_longitude = ft_facInfo.getFactory_longitude();
         float ft_factory_latitude = ft_facInfo.getFactory_latitude();
         //获得买家卖家之间的路线距离
-        double distance = new DistanceUtil().getDistance(ff_factory_longitude, ff_factory_latitude, ft_factory_longitude, ft_factory_latitude);
+        double distance = DistanceUtil.getDistance(ff_factory_longitude, ff_factory_latitude, ft_factory_longitude, ft_factory_latitude);
         map.put("ff_name",driOrderFF_name);
         map.put("ft_name",driOrderFT_name);
         map.put("facOrderInfo",facOrderInfo);
@@ -187,6 +187,7 @@ public class DriverOrderServer {
      * 3：余额不足
      * 4：当前用户已存在订单
      * 5: 未绑定银行卡
+     * 6： 车辆类型不符合
      */
     public int addDriOrderInfo(Map<String ,Object> map){
         //从map中获得信息
@@ -197,10 +198,25 @@ public class DriverOrderServer {
         //得到工厂订单信息
         FactoryOrder facOrderInfo = facOrderMapper.getFacOrderInfo(factory_orderid);
         int order_carclass = facOrderInfo.getOrder_carclass();
+        //获得司机信息
+        DriverMsgMapper driverMsgMapper = sqlsession.getMapper(DriverMsgMapper.class);
+        DriverMsg driverMsg = driverMsgMapper.getDriverMsg(driver_id);
+        if (order_carclass != driverMsg.getDcard_carclass()){
+            return 6;
+        }
 
+        //设置订单保证金
+        float ensure_money;
+        if (order_carclass == 1){
+            ensure_money = (float) (0.2 * facOrderInfo.getOrder_goodprice() * 80);
+            map.put("order_ensuremoney",ensure_money);
+            map.put("order_money",facOrderInfo.getOrder_goodprice() * 80);
+        }else {
+            ensure_money = (float) (0.2 * facOrderInfo.getOrder_goodprice() * 45);
+            map.put("order_ensuremoney",ensure_money);
+            map.put("order_money",facOrderInfo.getOrder_goodprice() * 45);
+        }
 
-
-        float ensure_money = (float) map.get("order_ensuremoney");
 
         //判断司机当前是否已经有了订单
         DriverOrder orderNow = new DriverOrderServer().getOrderNow(driver_id);
@@ -208,9 +224,6 @@ public class DriverOrderServer {
             return 4;  //返回4，表示当前已经存在订单
         }
 
-
-        //账单Mapper
-        UserBillMapper userBillMapper = sqlsession.getMapper(UserBillMapper.class);
         //钱包Mapper
         UserWalletMapper userWalletMapper = sqlsession.getMapper(UserWalletMapper.class);
         UserWallet walletInfo = userWalletMapper.getWalletInfo(driver_id, 1);
@@ -234,7 +247,7 @@ public class DriverOrderServer {
             order_actualcarnum = order_actualcarnum + 1;
             facOrderInfo.setOrder_actualcarnum(order_actualcarnum);
             //进行账单信息及钱包信息的更改
-            int i2 = addDriEnsureBill((Float) map.get("order_ensuremoney"), driver_id, factory_orderid);
+            int i2 = addDriEnsureBill(ensure_money, driver_id, factory_orderid);
             //进行订单信息的更改
             int i1 = facOrderMapper.editFacOrder(facOrderInfo);
             //进行司机订单的添加
@@ -247,7 +260,7 @@ public class DriverOrderServer {
                      在这里进行工厂订单结束接单的修改 1-->3
                 */
                     facOrderInfo.setOrder_state(3);   //转化为接单完成/进行中
-                    facOrderInfo.setOrder_enddate(TimeUtils.getNowDate()); //注入当前时间
+                    facOrderInfo.setOrder_endupdate(TimeUtils.getNowDate()); //注入当前时间
                     int i3 = facOrderMapper.editFacOrder(facOrderInfo);
                     if (i3==1){
                         sqlsession.commit();

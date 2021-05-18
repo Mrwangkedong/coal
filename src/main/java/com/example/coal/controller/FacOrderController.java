@@ -8,6 +8,7 @@ import com.example.coal.server.FacOrderServer;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -20,7 +21,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*",maxAge = 3600)
 @EnableSwagger2
 public class FacOrderController {
-    FacOrderServer facOrderServer = new FacOrderServer();
+    @Autowired
+    FacOrderServer facOrderServer;
 
     @ResponseBody
     @RequestMapping(path = "/getFacOrderInfo",method = RequestMethod.POST)

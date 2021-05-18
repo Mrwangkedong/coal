@@ -5,6 +5,7 @@ import com.example.coal.bean.UserBill;
 import com.example.coal.server.UserBillServer;
 import com.example.coal.server.UserWalletServer;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -17,7 +18,8 @@ import java.util.List;
 @EnableSwagger2
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class UserBillConroller {
-    UserBillServer userBillServer = new UserBillServer();
+    @Autowired
+    private UserBillServer userBillServer ;
 
     @ApiOperation("得到某用户的历史账单")
     @PostMapping("/getUserBillList")

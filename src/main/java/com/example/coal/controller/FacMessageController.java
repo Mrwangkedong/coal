@@ -3,6 +3,7 @@ package com.example.coal.controller;
 import com.example.coal.bean.FactoryMessage;
 import com.example.coal.server.FacMessageServer;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,8 @@ import java.util.List;
 @EnableSwagger2
 public class FacMessageController {
 
-    FacMessageServer  facMessageServer = new FacMessageServer();
+    @Autowired
+    private FacMessageServer  facMessageServer;
 
     @ResponseBody
     @ApiOperation("新增新消息,向ft_fac")

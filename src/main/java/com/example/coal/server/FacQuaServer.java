@@ -3,9 +3,11 @@ package com.example.coal.server;
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.bean.FactoryQualified;
 import com.example.coal.dao.FacQualifiedMapper;
+import org.springframework.stereotype.Service;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
+@Service
 public class FacQuaServer {
 
     FacQualifiedMapper mapper = sqlsession.getMapper(FacQualifiedMapper.class);

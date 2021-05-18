@@ -3,6 +3,7 @@ package com.example.coal.server;
 import com.example.coal.bean.FactoryMsg;
 import com.example.coal.dao.DriverOrderMapper;
 import com.example.coal.dao.FacMsgMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 import static com.example.coal.server.DriverMsgServer.sqlsession;
 
-
+@Service
 public class FacMsgServer {
 
     FacMsgMapper mapper = sqlsession.getMapper(FacMsgMapper.class);

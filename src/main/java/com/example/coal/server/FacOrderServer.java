@@ -3,6 +3,7 @@ package com.example.coal.server;
 import com.example.coal.Utils.DistanceUtil;
 import com.example.coal.Utils.MapUtils;
 import com.example.coal.Utils.MybatisUtils;
+import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.DriverOrder;
 import com.example.coal.bean.FactoryMsg;
@@ -12,6 +13,7 @@ import com.example.coal.dao.FacOrderMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 
 import javax.jws.Oneway;
@@ -20,10 +22,11 @@ import static com.example.coal.server.DriverMsgServer.sqlsession;
 
 import java.util.*;
 
+@Service
 public class FacOrderServer{
 
 
-    FacOrderMapper mapper = sqlsession.getMapper(FacOrderMapper.class);
+     FacOrderMapper mapper = sqlsession.getMapper(FacOrderMapper.class);
 
     /***
      * 通过工厂订单id，获得工厂订单的详细信息
@@ -351,6 +354,7 @@ public class FacOrderServer{
         }
         //进行订单状态转换
         facOrderInfo.setOrder_state(0);
+        facOrderInfo.setOrder_enddate(TimeUtils.getNowDate());
         int i = mapper.editFacOrder(facOrderInfo);
         if (i==1)
             sqlsession.commit();
@@ -504,7 +508,7 @@ public class FacOrderServer{
         //进行facOrderSonOrders遍历
         for (DriverOrder facOrderSonOrder : facOrderSonOrders) {
             //获得子订单id，司机id
-            int dri_orderId = facOrderSonOrder.getDriver_id();
+            int dri_orderId = facOrderSonOrder.getId();
             int driver_id = facOrderSonOrder.getDriver_id();
             //通过子订单司机id获得司机姓名，电话号码
             DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);

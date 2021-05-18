@@ -8,6 +8,7 @@ import com.example.coal.server.DriverOrderServer;
 import com.example.coal.server.FacOrderServer;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -22,7 +23,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*",maxAge = 3600)
 @EnableSwagger2
 public class DriverOrderController {
-    DriverOrderServer driverOrderServer = new DriverOrderServer();
+    @Autowired
+    private DriverOrderServer driverOrderServer ;
+
 
 //    查看具体司机的历史订单
     @ResponseBody

@@ -20,6 +20,7 @@ import static com.example.coal.server.DriverMsgServer.sqlsession;
 
 @Service
 public class MagExamServer {
+
     MagExamMapper magExamMapper = sqlsession.getMapper(MagExamMapper.class);
     FacMsgMapper facMsgMapper = sqlsession.getMapper(FacMsgMapper.class);
     FactoryStaffMapper factoryStaffMapper = sqlsession.getMapper(FactoryStaffMapper.class);
