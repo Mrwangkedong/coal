@@ -39,7 +39,7 @@ public class AppPush {
      * @param fac_orderid 工厂id
      */
     public void pushAll(String content,int fac_orderid){
-        String msg = "{title:\"新12订单\",content:\""+content+"\",payload:\"{action:'orderWait',fac_orderid:"+fac_orderid+"}\"}";
+        String msg = "{title:\"新订单\",content:\""+content+"\",payload:\"{action:'orderWait',fac_orderid:"+fac_orderid+"}\"}";
 
         TransmissionTemplate t = new TransmissionTemplate();
         t.setAppId(appId);
@@ -63,7 +63,7 @@ public class AppPush {
 
     public boolean sendMessageAndroid(String cid, String content,int orderID,int fac_orderid) {
 
-        String msg = "{title:\"订单修改\",content:\""+content+"\",payload:\"{action:'orderNow',orderID:"+orderID+",fac_orderid:"+fac_orderid+"}\"}";
+        String msg = "{title:\"订单修改\",content:\""+content+"\",payload:\"{action:'orderNow'}\"}";
 
         TransmissionTemplate template = new TransmissionTemplate();
         template.setAppId(APPInfo.APPID);
@@ -105,5 +105,6 @@ public class AppPush {
 //        new AppPush().pushOne(cid,title,content);
 
         new AppPush().pushAll("大秀山煤业发布新的订单",6);
+//        new AppPush().sendMessageAndroid("2c31442284485cc4a0ced1acbac30556","皮重修改",1,1);
     }
 }
