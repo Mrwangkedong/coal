@@ -150,6 +150,8 @@ public class DriverOrderServer {
             map.put("facOrderCarClass",factoryOrder.getOrder_carclass());
             map.put("facOrderFF_name",facOrderFF_name);
             map.put("facOrderFT_name",facOrderFT_name);
+            map.put("facOrderNeedCarNum",factoryOrder.getOrder_targetcarnum() - factoryOrder.getOrder_actualcarnum());
+            map.put("facDistance",DistanceUtil.getDistanceByFacOrder(fac_orderid));
             maps.add(map);
         }
         return maps;

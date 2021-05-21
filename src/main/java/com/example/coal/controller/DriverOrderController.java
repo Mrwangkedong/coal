@@ -75,7 +75,7 @@ public class DriverOrderController {
 
 //    获得当前可接收订单
     @ResponseBody
-    @ApiOperation("获得当前可接搜订单")
+    @ApiOperation("获得当前可接搜订单List")
     @RequestMapping(path = "/getOrderWaitInfo",method = RequestMethod.GET)
     public List<Map<String, Object>> getOrderWaitInfo(){
         return driverOrderServer.getOrderWaitInfo();
