@@ -1,6 +1,7 @@
 package com.example.coal.server;
 
 
+import com.example.coal.Utils.AppPush;
 import com.example.coal.Utils.DistanceUtil;
 import com.example.coal.Utils.TimeUtils;
 import com.example.coal.bean.*;
@@ -344,7 +345,12 @@ public class DriverOrderServer {
         //修改状态
         driOrderInfo.setOrder_state(2);
         int i = mapper.editDriOrderInfo(driOrderInfo);
+
+        //获得司机信息
+        DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driOrderInfo.getDriver_id());
+
         if (i==1){
+            AppPush.sendMessageAndroid(driverMsg.getD_cid(),"订单修改：皮重="+driOrderInfo.getOrder_pz());
             sqlsession.commit();
         }
         return i;
@@ -386,7 +392,12 @@ public class DriverOrderServer {
         FacOrderMapper facOrderMapper = sqlsession.getMapper(FacOrderMapper.class);
         int i = facOrderMapper.editFacOrder(facOrderInfo);
 
+
+        //获得司机信息
+        DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driOrderInfo.getDriver_id());
+
         if (i==1 && i1==1){
+            AppPush.sendMessageAndroid(driverMsg.getD_cid(),"订单修改：离场重量="+weightNow+"\t离场毛重="+driOrderInfo.getOrder_mz());
             sqlsession.commit();
             return 1;
         }else {
@@ -480,8 +491,13 @@ public class DriverOrderServer {
         int driver_id = driOrderInfo.getDriver_id();
         new UserWalletServer().addWalletMoney(driver_id,1,facOrderInfo.getOrder_goodprice() * mz2,1);
 
+
+        //获得司机信息
+        DriverMsg driverMsg = new DriverMsgServer().getDriverMsg(driver_id);
+
         //返回
         if (i1 == 1 && i==1){
+            AppPush.sendMessageAndroid(driverMsg.getD_cid(),"订单修改：离场重量="+weightNow+"\t到场毛重="+driOrderInfo.getOrder_mz2());
             sqlsession.commit();
             return 1;
         }else {

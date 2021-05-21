@@ -38,7 +38,7 @@ public class AppPush {
      * @param content 内容
      * @param fac_orderid 工厂id
      */
-    public void pushAll(String content,int fac_orderid){
+    public static void pushAll(String content,int fac_orderid){
         String msg = "{title:\"新订单\",content:\""+content+"\",payload:\"{action:'orderWait',fac_orderid:"+fac_orderid+"}\"}";
 
         TransmissionTemplate t = new TransmissionTemplate();
@@ -61,7 +61,7 @@ public class AppPush {
         System.out.println(ret.getResponse().toString());
     }
 
-    public boolean sendMessageAndroid(String cid, String content,int orderID,int fac_orderid) {
+    public static boolean sendMessageAndroid(String cid, String content) {
 
         String msg = "{title:\"订单修改\",content:\""+content+"\",payload:\"{action:'orderNow'}\"}";
 

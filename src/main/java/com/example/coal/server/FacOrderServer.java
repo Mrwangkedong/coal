@@ -1,9 +1,6 @@
 package com.example.coal.server;
 
-import com.example.coal.Utils.DistanceUtil;
-import com.example.coal.Utils.MapUtils;
-import com.example.coal.Utils.MybatisUtils;
-import com.example.coal.Utils.TimeUtils;
+import com.example.coal.Utils.*;
 import com.example.coal.bean.DriverMsg;
 import com.example.coal.bean.DriverOrder;
 import com.example.coal.bean.FactoryMsg;
@@ -282,9 +279,11 @@ public class FacOrderServer{
         FactoryOrder facOrderInfo = mapper.getFacOrderInfo(fac_orderID);
         //更改订单的状态信息,2(待确认)->1(接单/进行)
         facOrderInfo.setOrder_state(1);
-        /*
-         * 此处应有转账
-         */
+        //根据订单id，获得订单双方工厂名称
+        Map<String, Object> facOrderInfo1 = getFacOrderInfo(fac_orderID);
+        String  ff_name = (String) facOrderInfo1.get("ff_name");
+        String  ft_name = (String) facOrderInfo1.get("ft_name");
+        String NewContent = "发布新订单："+ff_name+"-->"+ft_name;
 
         //进行消息通知
         int i = new FacMessageServer().addNewMessage(facOrderInfo.getFt_id(), facOrderInfo.getFf_id(), "接受发起的订单");
@@ -292,6 +291,10 @@ public class FacOrderServer{
         int i2 = mapper.editFacOrder(facOrderInfo);
         if (i == 1 && i2 == 1){
             sqlsession.commit();
+            /*
+            进行新订单通知
+             */
+            AppPush.pushAll(NewContent,fac_orderID);
             return 1;
         }else {
             return 0;
