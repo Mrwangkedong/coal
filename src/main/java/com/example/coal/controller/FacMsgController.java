@@ -36,9 +36,9 @@ public class FacMsgController {
     FacQuaServer facQuaServer;
 
     @ResponseBody
-    @ApiOperation("获得所有工厂名称")
+    @ApiOperation("获得所有工厂名称与id")
     @GetMapping(path = "/getFacNames")
-    public List<String> getFacNames(){
+    public List<Map<String,Object>> getFacNames(){
         return facMsgServer.getFacNames();
     }
 

@@ -92,11 +92,15 @@ public class FacMsgServer {
      * 获得全部工厂名称
      * @return 全部工厂名称
      */
-    public List<String> getFacNames(){
+    public List<Map<String,Object>> getFacNames(){
         List<FactoryMsg> facInfos = mapper.getFacInfos();
-        List<String> names = new ArrayList<>();
+        List<Map<String,Object>> names = new ArrayList<>();
+
         for (FactoryMsg facInfo : facInfos) {
-            names.add(facInfo.getName());
+            Map<String,Object> map = new HashMap<>();
+            map.put("fac_id",facInfo.getId());
+            map.put("fac_name",facInfo.getName());
+            names.add(map);
         }
 
         return names;
