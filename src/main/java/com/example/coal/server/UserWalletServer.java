@@ -144,7 +144,7 @@ public class UserWalletServer{
                 userBill.setUser2_name("订单返现");
             else userBill.setUser2_name("充值");
             userBill.setBill_money(moneyNum);
-            userBill.setBill_state(2);
+            userBill.setBill_state(wallet_state);   //1表示司机  2表示工厂
             userBill.setBill_type(1);
             userBill.setBill_data(TimeUtils.getNowDate());
             UserBillMapper userBillMapperapper = sqlsession.getMapper(UserBillMapper.class);
