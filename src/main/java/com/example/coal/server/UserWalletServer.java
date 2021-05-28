@@ -142,6 +142,8 @@ public class UserWalletServer{
             userBill.setUser1_id(user_id);
             if (billState == 1)
                 userBill.setUser2_name("订单返现");
+            else if(billState == 3)
+                userBill.setUser2_name("订单保证金退还");
             else userBill.setUser2_name("充值");
             userBill.setBill_money(moneyNum);
             userBill.setBill_state(wallet_state);   //1表示司机  2表示工厂

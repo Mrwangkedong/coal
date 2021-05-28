@@ -491,7 +491,8 @@ public class DriverOrderServer {
         进行资金转移
          */
         int driver_id = driOrderInfo.getDriver_id();
-        new UserWalletServer().addWalletMoney(driver_id,1,facOrderInfo.getOrder_goodprice() * mz2,1);
+        new UserWalletServer().addWalletMoney(driver_id,1,facOrderInfo.getOrder_goodprice() * mz2,1);  //增加订单的钱
+        new UserWalletServer().addWalletMoney(driver_id,1, (float) (facOrderInfo.getOrder_goodprice() * mz2 * 0.2),3);  //增加订单的保证金返回
 
 
         //获得司机信息
