@@ -33,10 +33,13 @@ public class FacStaffServer {
 
     /***
      * 添加新的员工信息
-     * @param factoryStaff
-     * @return
+     * @param factoryStaff 员工信息实体
+     * @return 1：成功  2：手机号重复  0：失败
      */
     public int addNewStaff(FactoryStaff factoryStaff){
+        int num = mapper.getStaffsByPhone(factoryStaff.getStaff_phonenum());
+        if (num != 0)
+            return 2;
         int i = mapper.addNewStaff(factoryStaff);
         if (i==1){
             sqlsession.commit();

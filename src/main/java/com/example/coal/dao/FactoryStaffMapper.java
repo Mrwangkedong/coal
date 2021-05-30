@@ -50,6 +50,13 @@ public interface FactoryStaffMapper {
     FactoryStaff getStaffInfoByPhone(String phoneNum);
 
     /**
+     * 通过手机号获得员员工信息列表【查看是否被多次注册】
+     * @param phoneNum 手机号码
+     * @return 注册手机号几个
+     */
+    int getStaffsByPhone(String phoneNum);
+
+    /**
      * 删除工厂名下所有职员
      * @param fac_id 工厂id
      * @return 1/0

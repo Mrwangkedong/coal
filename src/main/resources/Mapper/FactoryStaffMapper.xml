@@ -27,7 +27,11 @@
     <select id="getStaffInfoByPhone" resultType="com.example.coal.bean.FactoryStaff" parameterType="String">
         select * from factory_staff where staff_phonenum = #{phoneNum}
     </select>
-    
+
+    <select id="getStaffsByPhone" resultType="int">
+        SELECT COUNT(*) from factory_staff WHERE staff_phonenum = #{phoneNum};
+    </select>
+
     <update id="editStaffInfo" parameterType="com.example.coal.bean.FactoryStaff">
         update factory_staff
         set staff_phonenum = #{staff_phonenum},staff_password = #{staff_password},staff_class = #{staff_class},
