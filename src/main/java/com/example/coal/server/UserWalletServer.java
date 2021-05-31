@@ -115,7 +115,7 @@ public class UserWalletServer{
     /**
      * 增加用户余额
      * @param user_id 用户id
-     * @param wallet_state 用户身份
+     * @param wallet_state 用户身份 司机1 工厂2
      * @param moneyNum 钱数
      * @param billState 账单类型（1：订单金额；2：充值金额）
      * @return 1/0  2-->未绑定银行卡
@@ -131,8 +131,8 @@ public class UserWalletServer{
             int i = mapper.editWalletBcardInfo(userWalletInfo);
             int i1 = 1;
             //如果是订单返现，则改变管理员余额，若是充值，不改变
-            if (billState == 1){
-                i1 = reduceManageMoney(moneyNum);
+            if (billState == 1 || billState == 3){
+                i1 = reduceManageMoney(moneyNum,billState,wallet_state,user_id);
             }
 
             /*
@@ -164,7 +164,7 @@ public class UserWalletServer{
     /**
      * 减少用户余额
      * @param user_id 用户id
-     * @param wallet_state 用户身份
+     * @param wallet_state 用户身份 1为司机 2为工厂
      * @param moneyNum 钱数
      * @param billState 发起订单/订单退费 1 ------- 充值/提现 2
      * @return 1/0  2-->未绑定银行卡 3-->余额不足
@@ -184,7 +184,16 @@ public class UserWalletServer{
             int i = mapper.editWalletBcardInfo(userWalletInfo);  //当前用户修改状况
             int i1 = 1;
             if (wallet_state != 3){
-                i1 = addManageMoney(moneyNum);  //管理员钱包修改状况
+//                wallet_state为2时候工厂订单运费  1时为司机订单押金
+                i1 = addManageMoney(moneyNum,wallet_state,user_id);  //管理员钱包修改状况
+            }
+
+            //如果是司机订单保证金的话，不进行账单生成
+            if (wallet_state == 1 && billState == 1 && i==1 && i1==1){
+                sqlsession.commit();
+                return 1;
+            }else if (i1==0 || i==0){
+                return 0;
             }
 
             /*
@@ -215,12 +224,33 @@ public class UserWalletServer{
      * @param moneyNum 金额
      * @return 1/0
      */
-    public int addManageMoney(float moneyNum){
+    public int addManageMoney(float moneyNum,int wallet_state,int user_id){
         //获得用户钱包信息
         UserWallet userWalletInfo = getUserWalletInfo(999, 3);
         float moneyNow = userWalletInfo.getWallet_money();
         userWalletInfo.setWallet_money(moneyNow+moneyNum);
-        return mapper.editWalletBcardInfo(userWalletInfo);
+        int i = mapper.editWalletBcardInfo(userWalletInfo);
+        /*
+        增加管理员账单
+         */
+        UserBill userBill = new UserBill();
+        userBill.setUser1_id(999);
+        if (wallet_state == 2)
+            userBill.setUser2_name("工厂订单押金&&工厂id【"+user_id+"】");
+        else userBill.setUser2_name("司机订单押金&&司机id【"+user_id+"】");
+        userBill.setBill_money(moneyNum);
+        userBill.setBill_state(3);
+        userBill.setBill_type(1);
+        userBill.setBill_data(TimeUtils.getNowDate());
+        UserBillMapper userBillMapperapper = sqlsession.getMapper(UserBillMapper.class);
+        int i2 = userBillMapperapper.addUserBill(userBill);
+        if (i==1 && i2 == 1){
+            return 1;   //此处不commit，后续进行
+        }else {
+            return 0;
+        }
+
+
     }
 
     /**
@@ -228,12 +258,38 @@ public class UserWalletServer{
      * @param moneyNum 金额
      * @return 1/0
      */
-    public int reduceManageMoney(float moneyNum){
+    public int reduceManageMoney(float moneyNum,int billType,int wallet_state,int user_id){
         //获得用户钱包信息
         UserWallet userWalletInfo = getUserWalletInfo(999, 3);
         float moneyNow = userWalletInfo.getWallet_money();
         userWalletInfo.setWallet_money(moneyNow-moneyNum);
-        return mapper.editWalletBcardInfo(userWalletInfo);
+        int i = mapper.editWalletBcardInfo(userWalletInfo);
+        /*
+        增加管理员账单
+         */
+        UserBill userBill = new UserBill();
+        userBill.setUser1_id(999);
+        if (billType == 3 && wallet_state == 2)   //工厂订单
+            userBill.setUser2_name("工厂订单运费退还&&工厂id【"+user_id+"】");
+        else if (billType == 3 && wallet_state == 1){
+            userBill.setUser2_name("司机订单保证金退还&&司机id【"+user_id+"】");
+        }else if (billType == 1 && wallet_state == 1){
+            userBill.setUser2_name("司机订单运费结算&&司机id【"+user_id+"】");
+        }
+
+        userBill.setBill_money(moneyNum);
+        userBill.setBill_state(3);
+        userBill.setBill_type(0);
+        userBill.setBill_data(TimeUtils.getNowDate());
+        UserBillMapper userBillMapperapper = sqlsession.getMapper(UserBillMapper.class);
+        int i2 = userBillMapperapper.addUserBill(userBill);
+        if (i==1 && i2 == 1){
+//            sqlsession.commit();
+            return 1;  //此处不commit，后续进行
+        }else {
+            return 0;
+        }
+
     }
 
 

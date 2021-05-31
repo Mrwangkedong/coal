@@ -300,7 +300,8 @@ public class DriverOrderServer {
         userBill.setBill_state(1);
 
         //更改钱包信息
-        int i = new UserWalletServer().editWalletMoney(user_id, 1, 0 - ensure_money);
+        int i = new UserWalletServer().reduceWalletMoney(user_id,1,ensure_money,1);
+//        int i = new UserWalletServer().editWalletMoney(user_id, 1, 0 - ensure_money);
         //增加账单信息
         int i1 = new UserBillServer().addUserBill(userBill);
 

@@ -353,7 +353,7 @@ public class FacOrderServer{
         float order_goodprice = facOrderInfo.getOrder_goodprice();
         int ff_id = facOrderInfo.getFf_id();
         if (order_actualweight2 < order_actualweight){
-            new UserWalletServer().addWalletMoney(ff_id,2,order_goodprice * (order_actualweight - order_actualweight2),1);
+            new UserWalletServer().addWalletMoney(ff_id,2,order_goodprice * (order_actualweight - order_actualweight2),3);
         }
         //进行订单状态转换
         facOrderInfo.setOrder_state(0);
