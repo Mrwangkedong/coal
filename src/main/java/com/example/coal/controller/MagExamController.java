@@ -47,8 +47,8 @@ public class MagExamController {
     @ResponseBody
     @ApiOperation("拒绝新工厂申请")
     @PostMapping("/refuseNewFacInfo")
-    int refuseNewFacInfo(int fac_id){
-        return magExamServer.refuseNewFacInfo(fac_id);
+    int refuseNewFacInfo(int fac_id , String refuseReason){
+        return magExamServer.refuseNewFacInfo(fac_id,refuseReason);
     }
 
     @ResponseBody

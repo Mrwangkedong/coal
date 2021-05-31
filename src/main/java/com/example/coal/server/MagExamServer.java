@@ -63,7 +63,7 @@ public class MagExamServer {
      * @param fac_id 工厂id
      * @return 1/0
      */
-    public int refuseNewFacInfo(int fac_id){
+    public int refuseNewFacInfo(int fac_id,String refuseReason){
         /*
         此处应该有短信/电话通知
          */
