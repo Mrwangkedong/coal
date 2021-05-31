@@ -1,8 +1,10 @@
 package com.example.coal.server;
 
 import com.example.coal.bean.FactoryMsg;
+import com.example.coal.bean.FactoryStaff;
 import com.example.coal.dao.DriverOrderMapper;
 import com.example.coal.dao.FacMsgMapper;
+import com.example.coal.dao.FactoryStaffMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +29,21 @@ public class FacMsgServer {
     }
 
     /**
+     * 审批新工厂信息时，返回工厂信息及管理员信息
+     * @param fac_id 工厂id
+     * @return map
+     */
+    public Map<String,Object> getNewFacInfo(int fac_id){
+        Map<String,Object> map = new HashMap<>();
+        FactoryMsg facInfo = mapper.getFacInfo(fac_id);
+        map.put("facInfo",facInfo);
+        //根据fac_id获得管理员信息
+        FactoryStaff facManager = sqlsession.getMapper(FactoryStaffMapper.class).getFacManager(fac_id);
+        map.put("facManager",facManager);
+        return map;
+    }
+
+    /**
      * 根据工厂id，获得工厂名称
      * @param fac_id 工厂id
      * @return 工厂名称
@@ -44,15 +61,18 @@ public class FacMsgServer {
      * @param factory_longitude 工厂经度
      * @param factory_latitude 工厂纬度
      * @param factory_address 工厂地址
-     * @return 新建数据id   0-->已存在  2-->添加失败
+     * @return 新建数据id   0-->已存在  2-->添加失败 3-->手机号码已被注册
      */
     public int addFacInfo(String facName,String factory_lpname,String factory_lpcardnum,
-                          float factory_longitude,float factory_latitude,String factory_address){
+                          float factory_longitude,float factory_latitude,String factory_address,String manage_phoneNum){
 //        根据工厂名称和法人查，是否已存在工厂
         FactoryMsg factoryMsg1 = mapper.exitFac(factory_lpname, facName);
         if (factoryMsg1 != null){
             return 0;
         }
+        int staffsByPhoneNum = sqlsession.getMapper(FactoryStaffMapper.class).getStaffsByPhone(manage_phoneNum);
+        if (staffsByPhoneNum != 0)
+            return 3;
         //新建一个FacMsg
         FactoryMsg factoryMsg = new FactoryMsg();
         factoryMsg.setName(facName);

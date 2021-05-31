@@ -57,6 +57,13 @@ public class FacMsgController {
     }
 
     @ResponseBody
+    @ApiOperation("审批新工厂信息时，返回工厂信息及管理员信息")
+    @PostMapping(path = "/getNewFacInfo")
+    public Map<String,Object> getNewFacInfo(int fac_id){
+        return facMsgServer.getNewFacInfo(fac_id);
+    }
+
+    @ResponseBody
     @ApiOperation("获得待审核工厂信息修改申请")
     @PostMapping(path = "/getFacQuaByFacId")
     FactoryQualified getFacQuaByFacId(int fac_id){
@@ -170,23 +177,25 @@ public class FacMsgController {
     @ApiOperation("新增工厂申请")
     @PostMapping("/addNewFactory")
     public int addNewFactory(MultipartFile[] facImg,HttpServletRequest request) throws IOException {
-
+        String manage_name = request.getParameter("manage_name");
+        String manage_phoneNum = request.getParameter("manage_phoneNum");
+        String manage_password = request.getParameter("manage_password");
+        /*
+        新增工厂信息
+         */
         String facName = request.getParameter("facName");
         String factory_lpname = request.getParameter("factory_lpname");
         String factory_lpcardnum = request.getParameter("factory_lpcardnum");
         float factory_longitude = Float.parseFloat(request.getParameter("factory_longitude"));
         float factory_latitude = Float.parseFloat(request.getParameter("factory_latitude"));
         String factory_address = request.getParameter("factory_address");
-        int fac_id = facMsgServer.addFacInfo(facName, factory_lpname, factory_lpcardnum, factory_longitude, factory_latitude, factory_address);
-        if (fac_id == 0 || fac_id == 2){
+        int fac_id = facMsgServer.addFacInfo(facName, factory_lpname, factory_lpcardnum, factory_longitude, factory_latitude, factory_address,manage_phoneNum);
+        if (fac_id == 0 || fac_id == 2 || fac_id == 3){
             return fac_id;
         }
         /*
         添加工厂管理员员工！！！！！（通过的时候添加）
          */
-        String manage_name = request.getParameter("manage_name");
-        String manage_phoneNum = request.getParameter("manage_phoneNum");
-        String manage_password = request.getParameter("manage_password");
         FactoryStaff factoryStaff = new FactoryStaff();
         factoryStaff.setStaff_name(manage_name);
         factoryStaff.setFactory_id(fac_id);
@@ -197,6 +206,8 @@ public class FacMsgController {
         if (i1==0){
             return 0;
         }
+
+
         /*
          * 返回得到的id，添加照片到指定路径
          */
@@ -221,7 +232,6 @@ public class FacMsgController {
         if (i==0){
             return i;
         }
-
         return 1;
     }
 

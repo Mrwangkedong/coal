@@ -28,6 +28,14 @@ public interface FactoryStaffMapper {
      */
     FactoryStaff getStaffInfo(int staff_id);
 
+    /**
+     * 在审核申请新工厂时，返回新工厂管理员信息
+     * @param fac_id 工厂id
+     * @return 管理员信息
+     */
+    FactoryStaff getFacManager(int fac_id);
+
+
     /***
      * 更改员工的基本信息
      * @param factoryStaff 员工实体信息
@@ -55,6 +63,9 @@ public interface FactoryStaffMapper {
      * @return 注册手机号几个
      */
     int getStaffsByPhone(String phoneNum);
+
+
+
 
     /**
      * 删除工厂名下所有职员

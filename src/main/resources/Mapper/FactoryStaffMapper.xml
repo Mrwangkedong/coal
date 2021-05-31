@@ -18,6 +18,11 @@
     <select id="getStaffInfo" resultType="com.example.coal.bean.FactoryStaff">
         select * from factory_staff where id = #{staff_id}
     </select>
+    
+    <select id="getFacManager" resultType="com.example.coal.bean.FactoryStaff">
+        select *
+        from factory_staff where factory_id = #{fac_id};
+    </select>
 
     <select id="getAllStaff" resultType="com.example.coal.bean.FactoryStaff">
         select *
